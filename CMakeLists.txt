@@ -3,17 +3,42 @@ project(tiger)
 
 set(CMAKE_CXX_STANDARD 11)
 set(tiger_link_libs "")
-find_package(Protobuf REQUIRED)
 
+option(CPU_ONLY "只用cpu" ON)
+
+
+find_package(Protobuf REQUIRED)
 if(PROTOBUF_FOUND)
     message(STATUS "protobuf library found")
     list(APPEND tiger_link_libs PUBLIC ${PROTOBUF_LIBRARIES})
+    include_directories(PRTOBUF_INCLUDE_DIRS)
 else()
-    message(FATAL_ERROR "protobuf library is needed but cant be found")
+    message(FATAL_ERROR "protobuf library is needed but can't be found")
 endif()
 
 find_package(Boost REQUIRED filesystem)
-list(APPEND tiger_link_libs PUBLIC ${Boost_LIBRARIES})
+if(Boost_FOUND)
+    message(STATUS "boost filesystem found")
+    list(APPEND tiger_link_libs PUBLIC ${Boost_LIBRARIES})
+    include_directories(Boost_INCLUDE_DIRS)
+else()
+    message(FATAL_ERROR "boost filesystem is needed but can't be found")
+endif()
+
+find_package(CUDA REQUIRED)
+if(CUDA_FOUND)
+    message(STATUS "cuda found")
+    include_directories(CUDA_INCLUDE_DIRS)
+else()
+    message(FATAL_ERROR "cuda is needed but can't be found")
+endif()
+
+file(GLOB_RECURSE cuda_headers *.h *.hpp *.cuh)
+file(GLOB_RECURSE cuda_srcs *.cu)
+cuda_add_library(gpu ${cuda_srcs} ${cuda_headers})
+
+list(APPEND tiger_link_libs PUBLIC gpu)
+
 
 PROTOBUF_GENERATE_CPP( PROTO_SRCS PROTO_HDRS 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/proto/tiger.proto)
