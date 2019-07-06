@@ -25,27 +25,31 @@ using google::protobuf::io::CodedOutputStream;
 bool read_proto_from_text_file(const char* filename, Message* proto){
     int fd = open(filename, O_RDONLY);
     CHECK_NE(fd, -1) << "file not found " << filename;
-    std::shared_ptr<FileInputStream> input(new FileInputStream(fd));
-    bool success = google::protobuf::TextFormat::Parse(input.get(), proto);
+    FileInputStream* input = new FileInputStream(fd);
+    bool success = google::protobuf::TextFormat::Parse(input, proto);
     close(fd);
+    delete input;
     return success;
 }
 
 void write_proto_to_text_file(const Message& proto, const char* filename){
     int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    std::shared_ptr<FileOutputStream> output(new FileOutputStream(fd));
-    CHECK(google::protobuf::TextFormat::Print(proto, output.get()));
+    FileOutputStream* output = new FileOutputStream(fd);
+    CHECK(google::protobuf::TextFormat::Print(proto, output));
+    delete output;
     close(fd);
 }
 
 bool read_proto_from_binary_file(const char* filename, Message* proto){
     int fd = open(filename, O_RDONLY);
     CHECK_NE(fd, -1) << "file not found " << filename;
-    std::shared_ptr<ZeroCopyInputStream> raw_input(new FileInputStream(fd));
-    std::shared_ptr<CodedInputStream> coded_input(new CodedInputStream(raw_input.get()));
+    ZeroCopyInputStream* raw_input = new FileInputStream(fd);
+    CodedInputStream* coded_input = new CodedInputStream(raw_input);
     coded_input->SetTotalBytesLimit(k_proto_read_bytes_limit, 536870912);
-    bool success = proto->ParseFromCodedStream(coded_input.get());
+    bool success = proto->ParseFromCodedStream(coded_input);
     close(fd);
+    delete raw_input;
+    delete coded_input;
     return success;
 }
 

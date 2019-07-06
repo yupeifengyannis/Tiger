@@ -2,5 +2,13 @@ syntax = "proto2";
 package tiger;
 
 message SolverParameter{
+    optional string net = 1;
+    optional string train_net = 2;
+    optional string test_net = 3;
 
 }
+
+message NetParameter{
+
+}
+
