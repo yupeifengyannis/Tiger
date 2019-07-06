@@ -4,8 +4,7 @@ project(tiger)
 set(CMAKE_CXX_STANDARD 11)
 set(tiger_link_libs "")
 
-option(CPU_ONLY "只用cpu" ON)
-
+option(CPU_ONLY "only use cpu" OFF)
 
 find_package(Protobuf REQUIRED)
 if(PROTOBUF_FOUND)
@@ -33,10 +32,10 @@ else()
     message(FATAL_ERROR "cuda is needed but can't be found")
 endif()
 
-file(GLOB_RECURSE cuda_headers *.h *.hpp *.cuh)
-file(GLOB_RECURSE cuda_srcs *.cu)
-cuda_add_library(gpu ${cuda_srcs} ${cuda_headers})
-
+file(GLOB_RECURSE cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR} *.cu)
+#需要制定cuda工程的头文件目录，不然编译老是找不到头文件
+cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+cuda_add_library(gpu ${cuda_srcs})
 list(APPEND tiger_link_libs PUBLIC gpu)
 
 
@@ -55,4 +54,3 @@ add_library(tiger ${cpp_srcs} ${PROTO_SRCS} ${PROTO_HDRS})
 target_link_libraries(tiger ${tiger_link_libs})
 
 add_subdirectory(test)
-
