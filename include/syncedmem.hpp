@@ -37,9 +37,10 @@ public:
     SyncedMemory& operator=(const SyncedMemory&) = delete;
     ~SyncedMemory();
     const void* cpu_data();
-    void set_cpu_data();
+    void set_cpu_data(void* data);
     const void* gpu_data();
-    void set_gpu_data();
+    /// \brief 是否需要保证data的size和之前的cpu_ptr_的size要一样
+    void set_gpu_data(void* data);
     void* mutable_cpu_data();
     void* mutable_gpu_data();
     enum SyncedHead{
