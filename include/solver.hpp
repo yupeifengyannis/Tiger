@@ -15,6 +15,12 @@ enum Enum{
 
 typedef std::function<SolverAction::Enum()> ActionCallBack;
 
+template <typename Dtype>
+class Solver{
+
+};
+
+
 
 }
 
