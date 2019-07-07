@@ -32,15 +32,14 @@ else()
     message(FATAL_ERROR "cuda is needed but can't be found")
 endif()
 
+PROTOBUF_GENERATE_CPP( PROTO_SRCS PROTO_HDRS 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/proto/tiger.proto)
+
 file(GLOB_RECURSE cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR} *.cu)
 #需要制定cuda工程的头文件目录，不然编译老是找不到头文件
 cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 cuda_add_library(gpu ${cuda_srcs})
 list(APPEND tiger_link_libs PUBLIC gpu)
-
-
-PROTOBUF_GENERATE_CPP( PROTO_SRCS PROTO_HDRS 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/proto/tiger.proto)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_BINARY_DIR})
