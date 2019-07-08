@@ -53,6 +53,21 @@ public:
     vector<shared_ptr<Blob<Dtype> > >& blobs(){
 	return blobs_;
     }
+
+    const LayerParameter& layer_param() const{
+	return layer_param_;
+    }
+
+    inline Dtype loss(const int top_index) const{
+	return (loss_.size() > top_index) ? loss_[top_index] : Dtype(0);
+    }
+
+    inline void set_loss(const int top_index, const Dtype value){
+	if(loss_.size() <= top_index){
+	    loss_.resize(top_index + 1, Dtype(0));
+	}
+	loss_[top_index] = value;
+    }
     
     /// \brief 子类可以重载该函数来给出该类的类型
     virtual inline const char* type() const{
@@ -92,6 +107,19 @@ public:
     virtual inline bool eaqual_num_bottom_top_blobs() const{
 	return false;
     }
+
+    inline bool param_propagate_down(const int param_id){
+	return (param_propagate_down_.size() > param_id) ?
+	    param_propagate_down_[param_id] : false;
+    }
+    
+    inline void set_param_propagate_down(const int param_id, const bool value){
+	if(param_propagate_down_.size() <= param_id){
+	    param_propagate_down_.resize(param_id + 1, true);
+	}
+	param_propagate_down_[param_id] = value;
+    }
+
 
 protected:
     LayerParameter layer_param_;
