@@ -39,13 +39,15 @@ add_library(prototiger ${PROTO_SRCS} ${PROTO_HDRS})
 target_link_libraries(prototiger ${PROTOBUF_LIBRARIES})
 list(APPEND tiger_link_libs PUBLIC prototiger)
 
-file(GLOB_RECURSE cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR} *.cu)
+file(GLOB_RECURSE cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cu)
 #需要制定cuda工程的头文件目录，不然编译老是找不到头文件
+message(${cuda_srcs})
 cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 cuda_add_library(gpu ${cuda_srcs})
 list(APPEND tiger_link_libs PUBLIC gpu)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/eigen)
 include_directories(${CMAKE_BINARY_DIR})
 file(GLOB cpp_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/utils/*.cpp

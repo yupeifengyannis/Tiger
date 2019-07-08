@@ -24,6 +24,18 @@ public:
 	    }
 	}
     virtual ~Layer(){}
+    
+    /// \brief setup这个函数应该是外界创建layer的接口
+    void setup(const vector<Blob<Dtype>*> & bottom, 
+	    const vector<Blob<Dtype>* >& top){
+	// 检查输入输出的blobs的个数
+	check_blob_counts(bottom, top);
+	// 主要用于解析LayerParameter的参数，由子类重载解析 
+	layer_setup(bottom, top);
+	// 根据相应的参数来确定相关blob的维度
+	reshape(bottom, top);
+
+    }
 
     virtual void layer_setup(const vector<Blob<Dtype>* >& bottom,
 	    const vector<Blob<Dtype>* >& top){}
@@ -41,8 +53,45 @@ public:
     vector<shared_ptr<Blob<Dtype> > >& blobs(){
 	return blobs_;
     }
+    
+    /// \brief 子类可以重载该函数来给出该类的类型
+    virtual inline const char* type() const{
+	return "";
+    }
+    
+    /// \brief 返回输入的blob的确切blob个数
+    virtual inline int exact_num_bottom_blobs() const{
+	return -1;
+    }
+    
+    /// \brief 返回输入blob的最小个数
+    virtual inline int min_num_bottom_blobs() const{
+	return -1;
+    }
+    
+    /// \brief 返回输入blob的最大个数
+    virtual inline int max_num_bottom_blobs() const{
+	return -1;
+    }
 
+    /// \brief 返回输出blobs的确切个数
+    virtual inline int exact_num_top_blobs() const{
+	return -1;
+    }
+    
+    /// \brief 返回输出blobs的最小个数
+    virtual inline int min_num_top_blobs() const{
+	return -1;
+    }
 
+    /// \brief 返回输出blbos的最大个数
+    virtual inline int max_num_top_blobs() const{
+	return -1;
+    }
+    /// \brief 返回bottom和top的blobs是否相等
+    virtual inline bool eaqual_num_bottom_top_blobs() const{
+	return false;
+    }
 
 protected:
     LayerParameter layer_param_;
@@ -62,7 +111,32 @@ protected:
     
     virtual void backward_gpu(const vector<Blob<Dtype>* >& top,
 	    const vector<Blob<Dtype>* >& bottom) = 0;
+    
+    /// \brief 该函数就是用来检查我们输入和输出的blobs的个数是否和
+    /// 设定的一致。
+    virtual void check_blob_counts(const vector<Blob<Dtype>* >& bottom,
+	    const vector<Blob<Dtype>* >& top){
+	if(exact_num_bottom_blobs() >= 0){
+	    CHECK_EQ(exact_num_bottom_blobs(), bottom.size()) << 
+		"输入的bottom的blobs的个数和我们设定的不符合";
+	}
+	// TODO(需要检查其他的blob的情况)
+    }
 
+    inline void set_loss_weights(const vector<Blob<Dtype>* >& top){
+	int num_loss_weights = layer_param_.loss_weight_size();
+	if(num_loss_weights){
+	    CHECK_EQ(top.size(), num_loss_weights) << 
+		"loss weights的个数必须和top的个数一致";
+	}
+	for(int top_id = 0; top_id < top.size(); top_id++){
+	    Dtype loss_weight = layer_param_.loss_weight(top_id);
+	    if(loss_weight == Dtype(0)){
+		continue;
+	    }
+	}
+	// TODO(需要完成学习参数的0\1权重参数设置)
+    }
 
 };
 
