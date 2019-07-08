@@ -35,6 +35,10 @@ endif()
 PROTOBUF_GENERATE_CPP( PROTO_SRCS PROTO_HDRS 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/proto/tiger.proto)
 
+add_library(prototiger ${PROTO_SRCS} ${PROTO_HDRS})
+target_link_libraries(prototiger ${PROTOBUF_LIBRARIES})
+list(APPEND tiger_link_libs PUBLIC prototiger)
+
 file(GLOB_RECURSE cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR} *.cu)
 #需要制定cuda工程的头文件目录，不然编译老是找不到头文件
 cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -49,7 +53,7 @@ file(GLOB cpp_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
     )
 
 link_libraries(glog)
-add_library(tiger ${cpp_srcs} ${PROTO_SRCS} ${PROTO_HDRS})
+add_library(tiger ${cpp_srcs})
 target_link_libraries(tiger ${tiger_link_libs})
 
 add_subdirectory(test)

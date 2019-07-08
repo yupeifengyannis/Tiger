@@ -5,6 +5,8 @@ message SolverParameter{
     optional string net = 1;
     optional string train_net = 2;
     optional string test_net = 3;
+
+    optional string type = 40 [default = "SGD"];
 }
 
 message NetParameter{
@@ -24,6 +26,25 @@ message BlobProto{
     repeated float diff = 6 [packed = true];
     repeated double double_data = 7 [packed = true];
     repeated double double_diff = 8 [packed = true];
-    repeated BlobShape shape = 9;
+    optional BlobShape shape = 9;
 }
+
+enum Phase{
+    TRAIN = 0;
+    TEST = 1;
+}
+message LayerParameter{
+    optional string name = 1;
+    optional string type = 2;
+    repeated string bottom = 3;
+    repeated string top = 4;
+    
+    optional Phase phase = 10;
+
+    repeated float loss_weight = 5;
+    
+    repeated BlobProto blobs = 6;
+}
+
+
 

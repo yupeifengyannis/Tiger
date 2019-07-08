@@ -155,7 +155,7 @@ public:
     void share_data(const Blob& other);
 
     void share_diff(const Blob& other);
-    bool ShapeEquals(const BlobProto& other);
+    bool shape_equals(const BlobProto& other);
 
 protected:
     std::shared_ptr<SyncedMemory> data_;///<存的是feature和label的数据
