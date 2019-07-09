@@ -24,6 +24,16 @@ else()
     message(FATAL_ERROR "boost filesystem is needed but can't be found")
 endif()
 
+find_package(OpenCV REQUIRED)
+if(OpenCV_FOUND)
+    message(STATUS "opencv found")
+    list(APPEND tiger_link_libs PUBLIC ${OpenCV_LIBRARIES})
+else()
+    message(FATAL_ERROR "opencv is needed but can't be found")
+endif()
+
+
+
 find_package(CUDA REQUIRED)
 if(CUDA_FOUND)
     message(STATUS "cuda found")
@@ -53,8 +63,10 @@ file(GLOB cpp_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/proto/*.cc
     )
 
-link_libraries(glog)
+link_libraries(glog gflags)
 add_library(tiger ${cpp_srcs})
 target_link_libraries(tiger ${tiger_link_libs})
 
 add_subdirectory(test)
+add_subdirectory(tools)
+add_subdirectory(sample/mnist)
