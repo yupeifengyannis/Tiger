@@ -33,7 +33,6 @@ else()
 endif()
 
 
-
 find_package(CUDA REQUIRED)
 if(CUDA_FOUND)
     message(STATUS "cuda found")
@@ -50,7 +49,9 @@ target_link_libraries(prototiger ${PROTOBUF_LIBRARIES})
 list(APPEND tiger_link_libs PUBLIC prototiger)
 
 file(GLOB_RECURSE cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cu)
-#需要制定cuda工程的头文件目录，不然编译老是找不到头文件
+# 需要制定cuda工程的头文件目录，不然编译老是找不到头文件
+# nvcc编译的时候需要用到c++11的特性，所以这里添加相应的flag
+list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
 cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 cuda_add_library(gpu ${cuda_srcs})
 list(APPEND tiger_link_libs PUBLIC gpu)
@@ -63,7 +64,7 @@ file(GLOB cpp_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/proto/*.cc
     )
 
-link_libraries(glog gflags)
+link_libraries(glog gflags leveldb)
 add_library(tiger ${cpp_srcs})
 target_link_libraries(tiger ${tiger_link_libs})
 

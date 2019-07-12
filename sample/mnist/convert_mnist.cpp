@@ -1,9 +1,12 @@
 #include <fstream>
+#include <memory>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <opencv2/opencv.hpp>
 #include "utils/leveldb.hpp"
+#include "tiger.pb.h"
 
+using namespace tiger;
 
 DEFINE_string(backend, "leveldb", "backend for storing the results");
 DEFINE_string(image_filename, "", "image file path");
@@ -52,24 +55,41 @@ void conver_dataset(const char* image_filename, const char* label_filename,
     image_file.read(reinterpret_cast<char*>(&cols), 4);
     cols = swap_endian(cols);
     LOG(INFO) << "cols is " << cols;
+    std::shared_ptr<tiger::LevelDB> db(new tiger::LevelDB);
+    db->open(db_path, tiger::NEW);
+    std::shared_ptr<tiger::LevelDBTransaction> txn(db->new_transaction());
     
     char label;
     char* pixels = new char[rows * cols];
-    image_file.read(pixels, rows * cols);
-    cv::Mat mat = cv::Mat::zeros(rows, cols, CV_32FC1);
-    cv::Mat dst_img(mat.rows*5, mat.cols*5.0, mat.type());
-    for(int i = 0; i < static_cast<int>(rows); i++){
-	for(int j = 0; j < static_cast<int>(cols); j++){
-	    std::cout << (int)pixels[i * cols + j] << " ";
-	    mat.at<float>(i, j) = (float)pixels[i * cols + j];
-	}
-	std::cout << std::endl;
-    }
-    resize(mat, dst_img, cv::Size(), 5, 5);
-    cv::imshow("img", dst_img);
-    cv::waitKey(0);
-    
+    int count = 0;
+    string value;
 
+    Datum datum;
+    datum.set_channels(1);
+    datum.set_height(rows);
+    datum.set_width(cols);
+
+    LOG(INFO) << "a total of " << num_items << "items";
+    LOG(INFO) << "rows: " << rows << "cols: " << cols;
+    for(int item_id = 0; item_id < num_items; item_id++){
+	image_file.read(pixels, rows * cols);
+	label_file.read(&label, 1);
+	datum.set_data(pixels, rows * cols);
+	datum.set_label(label);
+	string key_str = to_string(item_id);
+	datum.SerializeToString(&value);
+	
+	txn->put(key_str, value);
+	
+	if(++count % 1000 == 0){
+	    txn->commit();
+	}
+    }
+    if(count % 1000 != 0){
+	txn->commit();
+    }
+    delete [] pixels;
+    db->close();
 
 }
 
