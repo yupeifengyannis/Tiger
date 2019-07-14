@@ -155,8 +155,6 @@ bool Blob<Dtype>::shape_equals(const BlobProto& other){
     return shape_ == other_shape;
 }
 
-
-
 template <typename Dtype>
 void Blob<Dtype>::from_proto(const BlobProto& proto, bool is_reshape){
     if(is_reshape){
@@ -194,7 +192,7 @@ void Blob<Dtype>::from_proto(const BlobProto& proto, bool is_reshape){
 	    data_vec[i] = proto.data(i);
 	}
     }
-    
+
     Dtype* diff_vec = mutable_cpu_diff();
     if(proto.double_diff_size() > 0){
 	CHECK_EQ(count_, proto.double_diff_size());
@@ -211,13 +209,25 @@ void Blob<Dtype>::from_proto(const BlobProto& proto, bool is_reshape){
 
 }
 
+template <typename Dtype>
+void Blob<Dtype>::to_mat_vec(vector<cv::Mat>& mat){
+    int channels = shape(1);
+    int height = shape(2);
+    int width = shape(3);
+    cv::Mat tmp_mat(height, width, CV_8UC3);
+    for(int num = 0; num < shape(0); num++){
+	for(int h = 0; h < height; h++){
+	    for(int w = 0; w < width; w++){
+		for(int c = 0; c < channels; c++){
+		    tmp_mat.at<cv::Vec3b>(h,w)[c] = static_cast<uchar>(data_at(num, c, h, w)); 
+		}
+	    }
+	}
+	mat.push_back(tmp_mat);
+    }
+}
 
-
-
-
-
-
-
-
+template class Blob<float>;
+template class Blob<double>;
 
 }

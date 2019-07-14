@@ -58,11 +58,11 @@ void SyncedMemory::to_cpu(){
 	    }
 	    tiger_gpu_memcpy(size_, gpu_ptr_, cpu_ptr_);
 	    head_ = SYNCED;
+#endif
 	    break;
 	case HEAD_AT_CPU:
 	case SYNCED:
 	    break;
-#endif
     }
 }
 

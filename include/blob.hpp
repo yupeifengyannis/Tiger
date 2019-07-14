@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <opencv2/opencv.hpp>
 #include "common.hpp"
 #include "syncedmem.hpp"
 #include "tiger.pb.h"
@@ -63,16 +64,16 @@ public:
     }
 
     inline int num() const{
-	return shape_(0);
+	return shape(0);
     }
     inline int channels() const{
-	return shape_(1);
+	return shape(1);
     }
     inline int height() const{
-	return shape_(2);
+	return shape(2);
     }
     inline int width() const{
-	return shape_(3);
+	return shape(3);
     }
     
     inline int offset(const int n, const int c = 0, const int h = 0, const int w = 0) const{
@@ -143,6 +144,7 @@ public:
     void update();
     void from_proto(const BlobProto& proto, bool reshape = true);
     void to_proto(BlobProto* proto, bool write_diff = false) const;
+    void to_mat_vec(vector<cv::Mat>& output_mat);
     
     Dtype asum_data() const;
     Dtype asum_diff() const;

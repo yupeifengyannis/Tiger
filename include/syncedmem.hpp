@@ -59,7 +59,6 @@ public:
 #ifndef CPU_ONLY
     void async_gpu_push(const cudaStream_t& stream);
 #endif
-
 private:
     void check_device();
     void to_cpu();
@@ -74,10 +73,5 @@ private:
     int device_;
 
 };
-
-
-
-
-
 }
 #endif

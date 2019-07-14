@@ -1,10 +1,15 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(tiger)
-
+set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_STANDARD 11)
 set(tiger_link_libs "")
 
 option(CPU_ONLY "only use cpu" OFF)
+option(HAVE_CUDA "have_cuda" ON)
+if(CPU_ONLY)
+    add_definitions(-DCPU_ONLY)
+    option(HAVE_CUDA "have cuda" OFF)
+endif()
 
 find_package(Protobuf REQUIRED)
 if(PROTOBUF_FOUND)
@@ -51,17 +56,19 @@ list(APPEND tiger_link_libs PUBLIC prototiger)
 file(GLOB_RECURSE cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cu)
 # 需要制定cuda工程的头文件目录，不然编译老是找不到头文件
 # nvcc编译的时候需要用到c++11的特性，所以这里添加相应的flag
-list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
-cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-cuda_add_library(gpu ${cuda_srcs})
-list(APPEND tiger_link_libs PUBLIC gpu)
-
+if(HAVE_CUDA)
+    list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
+    cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+    cuda_add_library(gpu ${cuda_srcs})
+    list(APPEND tiger_link_libs PUBLIC gpu)
+endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/eigen)
 include_directories(${CMAKE_BINARY_DIR})
 file(GLOB cpp_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/utils/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/proto/*.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/layers/*.cpp
     )
 
 link_libraries(glog gflags leveldb)
@@ -71,3 +78,4 @@ target_link_libraries(tiger ${tiger_link_libs})
 add_subdirectory(test)
 add_subdirectory(tools)
 add_subdirectory(sample/mnist)
+add_subdirectory(sample/bdd100k)

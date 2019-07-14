@@ -44,17 +44,27 @@ message LayerParameter{
     repeated float loss_weight = 5;
 
     repeated BlobProto blobs = 6;
+    optional TransformationParameter transform_param = 7;
+    optional DataParameter data_param = 8;
 }
 
 message TransformationParameter{
-    optional float sacle = 1 [default = 1];
+    optional float scale = 1 [default = 1];
     optional bool mirror = 2 [default = false];
     optional uint32 crop_size = 3 [default = 0];
     optional string mean_file = 4;
-    optional float mean_value = 5;
+    repeated float mean_value = 5;
     optional bool force_color = 6 [default = false];
     optional bool force_gray = 7 [default = false];
 }
+
+message DataParameter{
+    optional string source = 1;
+    optional bool forced_encoded_color = 2 [default = false];
+    optional uint32 batch_size = 3;
+    optional uint32 prefetch = 4 [default = 4];
+}
+
 
 message Datum{
     optional int32 channels = 1;
@@ -64,6 +74,21 @@ message Datum{
     optional int32 label = 5;
     repeated float float_data = 6;
     optional bool encoded = 7 [default = false];
+    repeated ObjectLabel object_label = 8;
+}
+
+// 目标检测的标签类型
+message ObjectLabel{
+    optional string name = 1;
+    optional int32 id = 2;
+    optional float x1 = 3;
+    optional float x2 = 4;
+    optional float y1 = 5;
+    optional float y2 = 6;
+    optional float heigth = 7;
+    optional float width = 8;
+    optional float center_x = 9;
+    optional float center_y = 10;
 }
 
 

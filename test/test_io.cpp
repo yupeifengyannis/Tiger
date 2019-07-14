@@ -1,4 +1,5 @@
 #include <boost/filesystem.hpp>
+#include <opencv2/opencv.hpp>
 #include <glog/logging.h>
 #include "tiger.pb.h"
 #include "common.hpp"
@@ -35,12 +36,17 @@ void test_read_proto_from_binary_file(const string& binary_name){
     LOG(INFO) << solver_param.DebugString();
 }
 
+void test_read_image_to_mat(const string file_name){
+    cv::Mat img = read_image_to_mat(file_name);
+    cv::imshow("test img", img);
+    cv::waitKey();
+}
+
+
+
 int main(){ 
-    CHECK(fs::exists("test_data")) << "test_data is not found ";
-    string file_name = "test_data/test_io.prototxt";
-    string binary_name = "test_data/test_io.data";
-    test_write_proto_to_binary_file(file_name, binary_name);
-    test_read_proto_from_binary_file(binary_name);
+    const string file_name = "./test_data/horse.jpg";
+    test_read_image_to_mat(file_name);
 }
 
 

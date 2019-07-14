@@ -3,7 +3,9 @@
 
 #include <google/protobuf/message.h>
 #include <glog/logging.h>
+#include <opencv2/opencv.hpp>
 #include "common.hpp"
+#include "tiger.pb.h"
 
 
 namespace tiger{
@@ -39,12 +41,19 @@ inline void read_proto_from_binary_file_or_die(const string& filename, Message* 
     CHECK(read_proto_from_binary_file(filename, proto));
 }
 
-
 void write_proto_to_binary_file(const Message& proto, const char* filename);
 
 inline void write_proto_to_binary_file(const Message& proto, const string filename){
     return write_proto_to_binary_file(proto, filename.c_str());
 }
+
+cv::Mat transform_datum_to_mat(const Datum& datum);
+
+cv::Mat read_image_to_mat(const string& file_name, const int height = 0, 
+    const int width = 0, const bool is_color = true);
+
+
+cv::Mat decode_datum_to_mat(const Datum& datum);
 
 
 

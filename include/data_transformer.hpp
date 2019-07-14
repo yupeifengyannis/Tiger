@@ -13,7 +13,7 @@ class DataTransformer{
 public:
     explicit DataTransformer(const TransformationParameter& param, Phase phase);
     virtual ~DataTransformer(){}
-    
+     
     void init_rand();
     
     void transform(const vector<cv::Mat>& mat_vector, Blob<Dtype>* transformed_blob);
@@ -25,8 +25,9 @@ public:
     vector<int> infer_blob_shape(const vector<cv::Mat>& mat_vector);
 
     vector<int> infer_blob_shape(const cv::Mat& cv_img);
-
+    
 protected:
+    virtual int rand(int n);
     TransformationParameter param_;
     Phase phase_;
     std::shared_ptr<Tiger::RNG> rng_;

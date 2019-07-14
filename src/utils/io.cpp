@@ -59,4 +59,68 @@ void write_proto_to_binary_file(const Message& proto, const char* filename){
 }
 
 
+cv::Mat read_image_to_mat(const string& file_name, const int height,
+    const int width, const bool is_color){
+    cv::Mat cv_img;
+    int cv_read_flag = is_color ? CV_LOAD_IMAGE_COLOR : CV_LOAD_IMAGE_GRAYSCALE;
+    cv::Mat cv_img_origin = cv::imread(file_name, cv_read_flag);
+    CHECK(cv_img_origin.data) << 
+	"load image data failed";
+    if(height > 0 && width > 0){
+	cv::resize(cv_img_origin, cv_img, cv::Size(width, height));
+    }
+    else{
+	cv_img = cv_img_origin;
+    }
+    return cv_img;
 }
+
+cv::Mat decode_datum_to_mat(const Datum& datum){
+    CHECK(datum.encoded()) << "datum not encoded";
+    cv::Mat cv_img;
+    const string& data = datum.data();
+    std::vector<char> vec_data(data.c_str(), data.c_str() + data.size());
+    cv_img = cv::imdecode(vec_data, -1);
+    CHECK(cv_img.data) << 
+	"could not decode datum";
+    return cv_img;
+}
+
+cv::Mat decode_datum_to_mat(const Datum& datum, bool is_color){
+    CHECK(datum.encoded()) << "datum not emcoded";
+    
+}
+
+
+
+
+cv::Mat transform_datum_to_mat(const Datum& datum){
+    CHECK(datum.has_data() && 
+	    datum.has_channels() && 
+	    datum.has_height() && 
+	    datum.has_width()) << 
+	"please check datum";
+    const char* pixel = datum.data().c_str();
+    int channels = datum.channels();
+    int height = datum.height();
+    int width = datum.width();
+    cv::Mat ret_mat(height, width, CV_8UC3);
+    CHECK_GT(channels, 0);
+    CHECK_LE(channels, 3);
+    CHECK_GT(height, 0);
+    CHECK_GT(width, 0);
+    ret_mat.reshape(height, width);
+    int top_index = 0;
+    for(int h = 0; h < height; h++){
+	for(int w = 0; w < width; w++){
+	    for(int c = 0; c < channels; c++){
+		top_index = (c * height + h) * width + w;
+		ret_mat.at<cv::Vec3b>(h, w)[c] = static_cast<uchar>(pixel[top_index]);
+	    }
+	}
+    } 
+    return ret_mat;
+}
+}
+
+
