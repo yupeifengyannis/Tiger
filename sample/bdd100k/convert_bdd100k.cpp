@@ -10,6 +10,7 @@
 #include "nlohmann/json.hpp"
 #include "tiger.pb.h"
 #include "utils/leveldb.hpp"
+#include "utils/io.hpp"
 
 
 using namespace std;
@@ -105,15 +106,17 @@ void convert_dataset(const std::string& image_path, const std::string& label_pat
     json json_label = json::parse(raw_label);
     Datum datum;
     int count = 0;
-    for(unsigned int i = 0; i < 2000; i++){
+    for(unsigned int i = 0; i < 200; i++){
+	datum.Clear();
 	json json_img = json_label[i];
 	json json_object = json_img["labels"];
 	std::string jpg_name = json_img["name"];
 	cv::Mat img_mat = cv::imread(image_file_table[jpg_name]);
-	datum.set_channels(img_mat.channels());
-	datum.set_height(img_mat.rows);
-	datum.set_width(img_mat.cols);
-	datum.set_data(img_mat.data, img_mat.cols * img_mat.rows * img_mat.channels());
+	// datum.set_channels(img_mat.channels());
+	// datum.set_height(img_mat.rows);
+	// datum.set_width(img_mat.cols);
+	// datum.set_data(img_mat.data, img_mat.cols * img_mat.rows * img_mat.channels());
+	mat_to_datum(img_mat, &datum);
 	for(auto item : json_object){
 	    if(item.find("box2d") != item.end()){
 		string label_name = item["category"];
@@ -143,11 +146,11 @@ void convert_dataset(const std::string& image_path, const std::string& label_pat
 	string key = jpg_name;
 	datum.SerializeToString(&value);
 	txn->put(key, value);
-	if(++count % 1000 == 0){
+	if(++count % 10 == 0){
 	    txn->commit();
 	}
     }
-    if(count % 1000 != 0){
+    if(count % 10 != 0){
 	txn->commit();
     }
     db->close();

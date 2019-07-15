@@ -65,7 +65,6 @@ message DataParameter{
     optional uint32 prefetch = 4 [default = 4];
 }
 
-
 message Datum{
     optional int32 channels = 1;
     optional int32 height = 2;

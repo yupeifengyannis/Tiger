@@ -9,7 +9,7 @@ template <typename Dtype>
 class DataLayer : public BasePrefetchingDataLayer<Dtype>{
 public:
     explicit DataLayer(const LayerParameter& param);
-    virtual ~DataLayer();
+    virtual ~DataLayer(){}
     virtual void data_layer_setup(const vector<Blob<Dtype>* >& bottom, 
 	    const vector<Blob<Dtype>* >& top);
     virtual inline const char* type() const {

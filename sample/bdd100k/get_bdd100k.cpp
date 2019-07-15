@@ -4,6 +4,7 @@
 #include "utils/io.hpp"
 #include "utils/leveldb.hpp"
 #include "data_transformer.hpp"
+#include "tiger.pb.h"
 
 using namespace std;
 using namespace tiger;
@@ -14,10 +15,21 @@ int main(){
     db->open(source, Mode::READ);
     std::shared_ptr<LevelDBCursor> cursor(db->new_cursor());
     Datum datum;
-    datum.ParseFromString(cursor->value());
-    cv::Mat img_mat = tiger::transform_datum_to_mat(datum);
-    cv::imshow("img", img_mat);
-    cv::waitKey();
+    while(cursor->valid()){
+	datum.ParseFromString(cursor->value());
+	cv::Mat img_mat = tiger::transform_datum_to_mat(datum);
+	int label_size = datum.object_label_size();
+	for(int i = 0; i < label_size; i++){
+	    ObjectLabel label = datum.object_label(i);
+	    cv::Rect rect(label.x1(), label.y1(), label.width(), label.heigth());
+	    cv::rectangle(img_mat, rect, cv::Scalar(0, 0, 255), 1, cv::LINE_8, 0); 
+	    cv::putText(img_mat, label.name(), cv::Point(label.x2(), label.y2()),
+		cv::FONT_HERSHEY_TRIPLEX, 1, cv::Scalar(0, 0, 255));
+	}
+	cv::imshow("img", img_mat);
+	cv::waitKey();
+	cursor->next();
+    }
 
 }
 

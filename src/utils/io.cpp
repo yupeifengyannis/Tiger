@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <memory>
 #include <fstream>
+#include <algorithm>
 
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
@@ -60,7 +61,7 @@ void write_proto_to_binary_file(const Message& proto, const char* filename){
 
 
 cv::Mat read_image_to_mat(const string& file_name, const int height,
-    const int width, const bool is_color){
+const int width, const bool is_color){
     cv::Mat cv_img;
     int cv_read_flag = is_color ? CV_LOAD_IMAGE_COLOR : CV_LOAD_IMAGE_GRAYSCALE;
     cv::Mat cv_img_origin = cv::imread(file_name, cv_read_flag);
@@ -88,10 +89,50 @@ cv::Mat decode_datum_to_mat(const Datum& datum){
 
 cv::Mat decode_datum_to_mat(const Datum& datum, bool is_color){
     CHECK(datum.encoded()) << "datum not emcoded";
-    
+
+}
+
+static bool match_ext(const std::string& file, std::string& en){
+    size_t p = file.rfind('.');
+    std::string ext = (p != file.npos) ? file.substr(p + 1) : file;
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    std::transform(en.begin(), en.end(), en.begin(), ::tolower);
+    if(ext == en){
+	return true;
+    }
+    if(en == "jpg" && ext == "jpeg"){
+	return true;
+    }
+    return false;
 }
 
 
+// 将mat转换为datum
+void mat_to_datum(const cv::Mat& img_mat, Datum* datum){
+    CHECK(img_mat.depth() == CV_8U) << "image data type must be unsigned type";
+    datum->set_channels(img_mat.channels());
+    datum->set_height(img_mat.rows);
+    datum->set_width(img_mat.cols);
+    datum->clear_data();
+    datum->clear_float_data();
+    datum->set_encoded(false);
+    int datum_channels = datum->channels();
+    int datum_height = datum->height();
+    int datum_width = datum->width();
+    int datum_size = datum_channels * datum_height * datum_width;
+    std::string buffer(datum_size, ' ');
+    for(int h = 0; h < datum_height; h++){
+	const uchar* ptr = img_mat.ptr<uchar>(h);
+	int img_index = 0;
+	for(int w = 0; w < datum_width; w++){
+	    for(int c = 0; c < datum_channels; c++){
+		int datum_index = ( c * datum_height + h) * datum_width + w;
+		buffer[datum_index] = static_cast<char>(ptr[img_index++]);
+	    }
+	}
+    }
+    datum->set_data(buffer);
+}
 
 
 cv::Mat transform_datum_to_mat(const Datum& datum){

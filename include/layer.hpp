@@ -19,7 +19,7 @@ public:
 		blobs_.resize(layer_param_.blobs_size());
 		for(int i = 0; i < layer_param_.blobs_size(); i++){
 		    blobs_[i].reset(new Blob<Dtype>());
-		    blobs_[i]->FromProto(layer_param_.blobs(i));
+		    blobs_[i]->from_proto(layer_param_.blobs(i));
 		}
 	    }
 	}
@@ -135,10 +135,10 @@ protected:
 	    const vector<Blob<Dtype>* >& top) = 0;
 
     virtual void backward_cpu(const vector<Blob<Dtype>* >& top,
-	    const vector<Blob<Dtype>* >& bottom) = 0;
+	    const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom) = 0;
     
     virtual void backward_gpu(const vector<Blob<Dtype>* >& top,
-	    const vector<Blob<Dtype>* >& bottom) = 0;
+	    const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom) = 0;
     
     /// \brief 该函数就是用来检查我们输入和输出的blobs的个数是否和
     /// 设定的一致。

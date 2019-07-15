@@ -53,7 +53,12 @@ cv::Mat read_image_to_mat(const string& file_name, const int height = 0,
     const int width = 0, const bool is_color = true);
 
 
+
 cv::Mat decode_datum_to_mat(const Datum& datum);
+
+void mat_to_datum(const cv::Mat& img_mat, Datum* datum);
+
+
 
 
 

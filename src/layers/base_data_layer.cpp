@@ -65,17 +65,33 @@ void BasePrefetchingDataLayer<Dtype>::forward_cpu(const vector<Blob<Dtype>* >& b
     if(prefetch_current_){
 	prefetch_free_.push(prefetch_current_);
     }
-    prefetch_current_ = prefetch_full_.pop("waitin for data");
+    prefetch_current_ = prefetch_full_.pop("waiting for data");
     top[0]->reshape_like(prefetch_current_->data_);
     top[0]->set_cpu_data(prefetch_current_->data_.mutable_cpu_data());
     if(this->output_label_){
 	top[1]->reshape_like(prefetch_current_->label_);
-	top[1]->set_cpu_data(prefetch_current_->label_->mutable_cpu_data());
+	top[1]->set_cpu_data(prefetch_current_->label_.mutable_cpu_data());
+    }
+}
+
+template <typename Dtype>
+void BasePrefetchingDataLayer<Dtype>::forward_gpu(const vector<Blob<Dtype>* >& bottom,
+	const vector<Blob<Dtype>* >& top){
+    if(prefetch_current_){
+	prefetch_free_.push(prefetch_current_);
+    }
+    prefetch_current_ = prefetch_full_.pop("waiting for data");
+    top[0]->reshape_like(prefetch_current_->data_);
+    top[0]->set_gpu_data(prefetch_current_->data_.mutable_gpu_data());
+    if(this->output_label_){
+	top[1]->reshape_like(prefetch_current_->label_);
+	top[1]->set_gpu_data(prefetch_current_->label_.mutable_gpu_data());
     }
 }
 
 
-
+template class BasePrefetchingDataLayer<float>;
+template class BasePrefetchingDataLayer<double>;
 
 
 }
