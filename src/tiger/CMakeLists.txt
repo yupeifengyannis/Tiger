@@ -5,6 +5,15 @@ add_library(prototiger ${PROTO_SRCS} ${PROTO_HDRS})
 target_link_libraries(prototiger ${PROTOBUF_LIBRARIES})
 list(APPEND tiger_link_libs PUBLIC prototiger)
 
+if(HAVE_CUDA)
+    file(GLOB_RECURSE cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR}/*.cu)
+    list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
+    cuda_include_directories(${CMAKE_SOURCE_DIR}/include)
+    cuda_add_library(gpu ${cuda_srcs})
+    list(APPEND tiger_link_libs PUBLIC gpu)
+endif()
+
+
 file(GLOB cpp_srcs ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/proto/*.cc
