@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_STANDARD 11)
 set(tiger_link_libs "")
 
-option(CPU_ONLY "only use cpu" OFF)
+option(CPU_ONLY "only use cpu" ON)
 option(HAVE_CUDA "have_cuda" ON)
 if(CPU_ONLY)
     add_definitions(-DCPU_ONLY)
