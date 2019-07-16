@@ -8,9 +8,9 @@
 #include <opencv2/opencv.hpp>
 
 #include "nlohmann/json.hpp"
-#include "tiger.pb.h"
-#include "utils/leveldb.hpp"
-#include "utils/io.hpp"
+#include "tiger/tiger.pb.h"
+#include "tiger/utils/leveldb.hpp"
+#include "tiger/utils/io.hpp"
 
 
 using namespace std;

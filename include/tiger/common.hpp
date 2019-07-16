@@ -1,10 +1,10 @@
-#ifndef COMMON_HPP
-#define COMMON_HPP
+#ifndef TIGER_COMMON_HPP
+#define TIGER_COMMON_HPP
 
 #include <string>
 #include <memory>
 #include <random>
-#include "utils/device_alternate.hpp"
+#include "tiger/utils/device_alternate.hpp"
 
 using namespace std;
 // TODO(Tiger单例类还有好多东西要去实现)

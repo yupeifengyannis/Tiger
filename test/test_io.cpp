@@ -1,9 +1,9 @@
 #include <boost/filesystem.hpp>
 #include <opencv2/opencv.hpp>
 #include <glog/logging.h>
-#include "tiger.pb.h"
-#include "common.hpp"
-#include "utils/io.hpp"
+#include "tiger/common.hpp"
+#include "tiger/utils/io.hpp"
+#include "tiger/tiger.pb.h"
 
 using namespace tiger;
 namespace fs = boost::filesystem;

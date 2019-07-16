@@ -1,7 +1,7 @@
-#ifndef UTILS_SIGNAL_HANDLER_H
-#define UTILS_SIGNAL_HANDLER_H
+#ifndef TIGER_UTILS_SIGNAL_HANDLER_H
+#define TIGER_UTILS_SIGNAL_HANDLER_H
 
-#include "solver.hpp"
+#include "tiger/solver.hpp"
 
 namespace tiger{
 

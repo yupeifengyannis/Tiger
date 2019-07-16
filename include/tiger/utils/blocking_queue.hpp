@@ -1,10 +1,10 @@
-#ifndef UTILS_BLOCKING_QUEUE_HPP
-#define UTILS_BLOCKING_QUEUE_HPP
+#ifndef TIGER_UTILS_BLOCKING_QUEUE_HPP
+#define TIGER_UTILS_BLOCKING_QUEUE_HPP
 #include <queue>
 #include <mutex>
 #include <string>
 #include <condition_variable>
-#include "blob.hpp"
+#include "tiger/blob.hpp"
 
 using namespace std;
 namespace tiger{

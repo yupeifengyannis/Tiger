@@ -1,10 +1,10 @@
-#ifndef DATA_TRANSFORMER_HPP
-#define DATA_TRANSFORMER_HPP
+#ifndef TIGER_DATA_TRANSFORMER_HPP
+#define TIGER_DATA_TRANSFORMER_HPP
 
 #include <vector>
 #include <opencv2/opencv.hpp>
-#include "tiger.pb.h"
-#include "blob.hpp"
+#include "tiger/blob.hpp"
+#include "tiger/tiger.pb.h"
 
 namespace tiger{
 

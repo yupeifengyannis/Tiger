@@ -1,4 +1,4 @@
-#include "syncedmem.hpp"
+#include "tiger/syncedmem.hpp"
 using namespace tiger;
 
 void test_initialize(){

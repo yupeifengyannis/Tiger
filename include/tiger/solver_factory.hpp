@@ -1,11 +1,11 @@
-#ifndef LAYER_FACTORY_HPP
-#define LAYER_FACTORY_HPP
+#ifndef TIGER_LAYER_FACTORY_HPP
+#define TIGER_LAYER_FACTORY_HPP
 
 #include <map>
 #include <memory>
 #include <vector>
-#include "tiger.pb.h"
-#include "common.hpp"
+#include "tiger/common.hpp"
+#include "tiger/tiger.pb.h"
 
 namespace tiger{
 

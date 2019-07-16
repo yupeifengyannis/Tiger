@@ -1,5 +1,5 @@
-#ifndef UITLS_DEVICE_ALTERNATE_HPP
-#define UITLS_DEVICE_ALTERNATE_HPP
+#ifndef TIGER_UITLS_DEVICE_ALTERNATE_HPP
+#define TIGER_UITLS_DEVICE_ALTERNATE_HPP
 
 #include <glog/logging.h>
 
@@ -19,7 +19,6 @@
     }while(0)
 
 #endif
-
 
 
 #endif

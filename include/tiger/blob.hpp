@@ -1,12 +1,12 @@
-#ifndef BLOB_HPP
-#define BLOB_HPP
+#ifndef TIGER_BLOB_HPP
+#define TIGER_BLOB_HPP
 
 #include <vector>
 #include <memory>
 #include <opencv2/opencv.hpp>
-#include "common.hpp"
-#include "syncedmem.hpp"
-#include "tiger.pb.h"
+#include "tiger/common.hpp"
+#include "tiger/syncedmem.hpp"
+#include "tiger/tiger.pb.h"
 
 const int k_max_blob_axes = 32;
 

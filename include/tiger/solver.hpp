@@ -1,5 +1,5 @@
-#ifndef SOLVER_HPP
-#define SOLVER_HPP
+#ifndef TIGER_SOLVER_HPP
+#define TIGER_SOLVER_HPP
 
 #include <functional>
 

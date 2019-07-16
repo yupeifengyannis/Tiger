@@ -1,6 +1,6 @@
 #include <glog/logging.h>
-#include "blob.hpp"
-#include "utils/blocking_queue.hpp"
+#include "tiger/blob.hpp"
+#include "tiger/utils/blocking_queue.hpp"
 
 namespace tiger{
 

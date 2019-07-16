@@ -1,5 +1,5 @@
-#include "utils/math_function.hpp"
-#include "syncedmem.hpp"
+#include "tiger/utils/math_function.hpp"
+#include "tiger/syncedmem.hpp"
 
 namespace tiger{
 

@@ -1,6 +1,6 @@
-#ifndef UTILS_MATH_FUNCTIONS
-#define UTILS_MATH_FUNCTIONS
-#include "common.hpp"
+#ifndef TIGER_UTILS_MATH_FUNCTIONS
+#define TIGER_UTILS_MATH_FUNCTIONS
+#include "tiger/common.hpp"
 #include <string.h>
 namespace tiger{
 

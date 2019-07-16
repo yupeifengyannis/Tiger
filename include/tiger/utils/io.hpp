@@ -1,11 +1,11 @@
-#ifndef UTILS_IO_HPP
-#define UTILS_IO_HPP
+#ifndef TIGER_UTILS_IO_HPP
+#define TIGER_UTILS_IO_HPP
 
 #include <google/protobuf/message.h>
 #include <glog/logging.h>
 #include <opencv2/opencv.hpp>
-#include "common.hpp"
-#include "tiger.pb.h"
+#include "tiger/common.hpp"
+#include "tiger/tiger.pb.h"
 
 
 namespace tiger{

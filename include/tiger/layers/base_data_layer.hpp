@@ -1,11 +1,11 @@
-#ifndef LAYERS_BASE_DATA_LAYER_HPP
-#define LAYERS_BASE_DATA_LAYER_HPP
+#ifndef TIGER_LAYERS_BASE_DATA_LAYER_HPP
+#define TIGER_LAYERS_BASE_DATA_LAYER_HPP
 
 #include <memory>
-#include "layer.hpp"
-#include "tiger.pb.h"
-#include "data_transformer.hpp"
-#include "utils/blocking_queue.hpp"
+#include "tiger/layer.hpp"
+#include "tiger/tiger.pb.h"
+#include "tiger/data_transformer.hpp"
+#include "tiger/utils/blocking_queue.hpp"
 
 namespace tiger{
 

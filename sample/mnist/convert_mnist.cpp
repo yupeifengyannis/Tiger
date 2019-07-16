@@ -3,8 +3,8 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <opencv2/opencv.hpp>
-#include "utils/leveldb.hpp"
-#include "tiger.pb.h"
+#include "tiger/utils/leveldb.hpp"
+#include "tiger/tiger.pb.h"
 
 using namespace tiger;
 

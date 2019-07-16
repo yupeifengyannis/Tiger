@@ -1,7 +1,7 @@
-#ifndef SYCEDMEM_HPP
-#define SYCEDMEM_HPP
+#ifndef TIGER_SYCEDMEM_HPP
+#define TIGER_SYCEDMEM_HPP
 #include <cstdlib>
-#include "common.hpp"
+#include "tiger/common.hpp"
 
 
 namespace tiger{

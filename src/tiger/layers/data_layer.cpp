@@ -1,7 +1,7 @@
 #include <opencv2/opencv.hpp>
-#include "utils/io.hpp"
-#include "layers/data_layer.hpp"
-#include "tiger.pb.h"
+#include "tiger/utils/io.hpp"
+#include "tiger/layers/data_layer.hpp"
+#include "tiger/tiger.pb.h"
 
 namespace tiger{
 

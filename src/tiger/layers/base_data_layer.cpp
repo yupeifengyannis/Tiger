@@ -1,5 +1,5 @@
-#include "layers/base_data_layer.hpp"
-#include "common.hpp"
+#include "tiger/layers/base_data_layer.hpp"
+#include "tiger/common.hpp"
 
 namespace tiger{
 

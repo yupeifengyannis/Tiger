@@ -1,8 +1,8 @@
-#ifndef LAYERS_DATA_LAYER_HPP
-#define LAYERS_DATA_LAYER_HPP
+#ifndef TIGER_LAYERS_DATA_LAYER_HPP
+#define TIGER_LAYERS_DATA_LAYER_HPP
 #include <memory>
-#include "layers/base_data_layer.hpp"
-#include "utils/leveldb.hpp"
+#include "tiger/layers/base_data_layer.hpp"
+#include "tiger/utils/leveldb.hpp"
 
 namespace tiger{
 template <typename Dtype>

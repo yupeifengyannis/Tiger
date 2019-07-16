@@ -2,9 +2,9 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <gflags/gflags.h>
-#include "data_transformer.hpp"
-#include "utils/io.hpp"
-#include "tiger.pb.h"
+#include "tiger/data_transformer.hpp"
+#include "tiger/utils/io.hpp"
+#include "tiger/tiger.pb.h"
 
 using namespace tiger;
 

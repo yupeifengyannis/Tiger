@@ -1,12 +1,12 @@
-#ifndef UTILS_LEVELDB_HPP
-#define UTILS_LEVELDB_HPP
+#ifndef TIGER_UTILS_LEVELDB_HPP
+#define TIGER_UTILS_LEVELDB_HPP
 
 
 #include <memory>
 #include <string>
 #include <leveldb/db.h>
 #include <leveldb/write_batch.h>
-#include "common.hpp"
+#include "tiger/common.hpp"
 
 namespace tiger{
 

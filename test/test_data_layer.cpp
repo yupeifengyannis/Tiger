@@ -1,8 +1,8 @@
 #include <string>
 #include <vector>
-#include "layers/data_layer.hpp"
-#include "utils/io.hpp"
-#include "blob.hpp"
+#include "tiger/layers/data_layer.hpp"
+#include "tiger/utils/io.hpp"
+#include "tiger/blob.hpp"
 
 using namespace tiger;
 
