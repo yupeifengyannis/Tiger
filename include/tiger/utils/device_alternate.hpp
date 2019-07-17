@@ -18,7 +18,18 @@
 	CHECK_EQ(error, cudaSuccess) << " " << cudaGetErrorString(error);\
     }while(0)
 
+
+const int CUDA_NUM_THREADS = 512;
+
+inline int GET_BLOCKS(const int N){
+    return (N + CUDA_NUM_THREADS - 1) / CUDA_NUM_THREADS;
+}
+
+
+
 #endif
+
+
 
 
 #endif

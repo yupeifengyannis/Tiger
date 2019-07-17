@@ -7,7 +7,7 @@
 namespace tiger{
 
 template <typename Dtype>
-class SigmoidLayer : NeuronLayer<Dtype>{
+class SigmoidLayer : public NeuronLayer<Dtype>{
 public:
     explicit SigmoidLayer(const LayerParameter& param) : 
 	NeuronLayer<Dtype>(param){}
@@ -21,13 +21,13 @@ protected:
 	    const vector<Blob<Dtype>* >& top) override;
 
     virtual void backward_cpu(const vector<Blob<Dtype>* >& top,
-	    const vector<Blob<Dtype>* >& top) override;
+	    const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom) override;
     
     virtual void forward_gpu(const vector<Blob<Dtype>* >& bottom,
 	    const vector<Blob<Dtype>* >& top) override;
 
     virtual void backward_gpu(const vector<Blob<Dtype>* >& top,
-	    const vector<Blob<Dtype>* >& bottom) override;
+	    const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom) override;
     
 
 };

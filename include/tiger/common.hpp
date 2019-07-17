@@ -59,6 +59,9 @@ public:
     }
 #endif
 
+    inline static void set_mode(Brew mode){
+	get().mode_ = mode;
+    }
     inline static Brew mode(){
 	return get().mode_;
     }

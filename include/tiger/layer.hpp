@@ -24,7 +24,7 @@ public:
 	    }
 	}
     virtual ~Layer(){}
-    
+
     /// \brief setup这个函数应该是外界创建layer的接口
     void setup(const vector<Blob<Dtype>*> & bottom, 
 	    const vector<Blob<Dtype>* >& top){
@@ -39,14 +39,14 @@ public:
 
     virtual void layer_setup(const vector<Blob<Dtype>* >& bottom,
 	    const vector<Blob<Dtype>* >& top){}
-    
+
     virtual void reshape(const vector<Blob<Dtype>* >& bottom,
 	    const vector<Blob<Dtype>* >& top) = 0;
-    
-    inline Dtype forward(const vector<Blob<Dtype>* >& bottom,
+
+    inline void forward(const vector<Blob<Dtype>* >& bottom,
 	    const vector<Blob<Dtype>* >& top);
-    
-    inline Dtype backward(const vector<Blob<Dtype>* >& top,
+
+    inline void backward(const vector<Blob<Dtype>* >& top,
 	    const vector<bool>& propagate_down,
 	    const vector<Blob<Dtype>* >& bottom);
 
@@ -68,22 +68,22 @@ public:
 	}
 	loss_[top_index] = value;
     }
-    
+
     /// \brief 子类可以重载该函数来给出该类的类型
     virtual inline const char* type() const{
 	return "";
     }
-    
+
     /// \brief 返回输入的blob的确切blob个数
     virtual inline int exact_num_bottom_blobs() const{
 	return -1;
     }
-    
+
     /// \brief 返回输入blob的最小个数
     virtual inline int min_num_bottom_blobs() const{
 	return -1;
     }
-    
+
     /// \brief 返回输入blob的最大个数
     virtual inline int max_num_bottom_blobs() const{
 	return -1;
@@ -93,7 +93,7 @@ public:
     virtual inline int exact_num_top_blobs() const{
 	return -1;
     }
-    
+
     /// \brief 返回输出blobs的最小个数
     virtual inline int min_num_top_blobs() const{
 	return -1;
@@ -112,7 +112,7 @@ public:
 	return (param_propagate_down_.size() > param_id) ?
 	    param_propagate_down_[param_id] : false;
     }
-    
+
     inline void set_param_propagate_down(const int param_id, const bool value){
 	if(param_propagate_down_.size() <= param_id){
 	    param_propagate_down_.resize(param_id + 1, true);
@@ -136,10 +136,10 @@ protected:
 
     virtual void backward_cpu(const vector<Blob<Dtype>* >& top,
 	    const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom) = 0;
-    
+
     virtual void backward_gpu(const vector<Blob<Dtype>* >& top,
 	    const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom) = 0;
-    
+
     /// \brief 该函数就是用来检查我们输入和输出的blobs的个数是否和
     /// 设定的一致。
     virtual void check_blob_counts(const vector<Blob<Dtype>* >& bottom,
@@ -167,6 +167,32 @@ protected:
     }
 
 };
+
+template <typename Dtype>
+inline void Layer<Dtype>::forward(const vector<Blob<Dtype>* >& bottom, 
+	const vector<Blob<Dtype>* >& top){
+    if(Tiger::mode() == Tiger::CPU){
+	forward_cpu(bottom, top);
+    }
+    else{
+	forward_gpu(bottom, top);
+    }
+}
+
+template <typename Dtype>
+inline void Layer<Dtype>::backward(const vector<Blob<Dtype>* >& top,
+	const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom){
+    if(Tiger::mode() == Tiger::CPU){
+	backward_cpu(top, propagate_down, bottom);
+    }
+    else{
+	backward_gpu(top, propagate_down, bottom);
+    }
+}
+
+
+
+
 
 
 }
