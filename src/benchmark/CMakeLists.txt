@@ -1,0 +1,5 @@
+PROTOBUF_GENERATE_CPP( BENCHMARK_PROTO_SRCS BENCHMARK_PROTO_HDRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/proto/benchmark.proto)
+add_library(protobenchmark ${BENCHMARK_PROTO_SRCS} ${BENCHMARK_PROTO_HDRS})
+target_link_libraries(protobenchmark ${PROTOBUF_LIBRARIES})
+

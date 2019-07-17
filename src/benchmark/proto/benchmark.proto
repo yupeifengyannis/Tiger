@@ -1,0 +1,31 @@
+syntax = "proto2";
+package benchmark;
+
+enum Weather{
+    CLEAR = 0;
+    SNOWY = 1;
+    RAINY = 2;
+    UNDEFINED = 3;
+}
+
+enum Time{
+    DAYTIME = 1;
+    NIGHT = 2;
+}
+
+message Bbox2d{
+    optional float x1 = 1;
+    optional float y1 = 2;
+    optional float x2 = 3;
+    optional float y2 = 4;
+    optional float center_x = 5;
+    optional float center_y = 6;
+    optional float height = 7;
+    optional float width = 8;
+}
+
+message Car{
+    optional Bbox2d bbox2d = 1;
+    optional Weather weather = 2;
+    optional Time time = 3;
+}

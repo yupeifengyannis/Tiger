@@ -57,6 +57,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 link_libraries(glog gflags leveldb)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/tiger tiger)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/benchmark benchmark)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
 add_subdirectory(tools)
 add_subdirectory(sample/mnist)
