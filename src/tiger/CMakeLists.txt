@@ -10,6 +10,7 @@ if(HAVE_CUDA)
     list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
     cuda_include_directories(${CMAKE_SOURCE_DIR}/include)
     cuda_add_library(gpu ${cuda_srcs})
+    CUDA_ADD_CUBLAS_TO_TARGET(gpu)
     list(APPEND tiger_link_libs PUBLIC gpu)
 endif()
 

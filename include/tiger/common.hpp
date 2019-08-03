@@ -58,7 +58,6 @@ public:
 	return get().curand_generator_;
     }
 #endif
-
     inline static void set_mode(Brew mode){
 	get().mode_ = mode;
     }
@@ -74,7 +73,6 @@ protected:
 #endif
 private:
     Tiger();
-
 };
 }
 

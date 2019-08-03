@@ -44,11 +44,6 @@ void* Tiger::RNG::generator(){
     return static_cast<void*>(generator_->rng());
 }
 
-
-
-
-
-
 Tiger::Tiger() : 
     mode_(Tiger::CPU){
 
@@ -64,7 +59,4 @@ Tiger& Tiger::get(){
     }
     return *instance_;
 }
-
-
-
 }

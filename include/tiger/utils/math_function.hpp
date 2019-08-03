@@ -1,7 +1,8 @@
 #ifndef TIGER_UTILS_MATH_FUNCTIONS
 #define TIGER_UTILS_MATH_FUNCTIONS
-#include "tiger/common.hpp"
 #include <string.h>
+#include <cblas.h>
+#include "tiger/common.hpp"
 namespace tiger{
 
 inline void tiger_memset(const size_t N, const int alpha, void* X){
@@ -13,6 +14,26 @@ void tiger_gpu_memcpy(const size_t N, const void* src, void* des);
 inline void tiger_gpu_memset(const size_t N, const int alpha, void* X){
     CUDA_CHECK(cudaMemset(X, alpha, N));
 }
+
+// 使用gpu进行矩阵矩阵乘法运算
+template <typename Dtype>
+void tiger_gpu_gemm(const CBLAS_TRANSPOSE TransA,
+	const CBLAS_TRANSPOSE TransB, const int M, const int N, const int K,
+	const Dtype alpha, const Dtype* A, const Dtype* B, const Dtype beta,
+	Dtype* C);
+
+// 使用gpu进行矩阵向量乘法运算
+template <typename Dtype>
+void tiger_gpu_gemv(const CBLAS_TRANSPOSE TransA, const int M, const int N,
+    const Dtype alpha, const Dtype* A, const Dtype* x, const Dtype beta,
+    Dtype* C);
+
+// 线性变换
+template <typename Dtype>
+void tiger_gpu_axpy(const int N, const Dtype alpha, const Dtype* X, Dtype* Y);
+
+template <typename Dtype>
+void tiger_gpu_axpby(const int N, const Dtype alpha, const Dtype* X, const Dtype beta, Dtype* Y);
 
 #endif
 
