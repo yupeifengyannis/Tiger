@@ -3,6 +3,7 @@ project(tiger)
 set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_STANDARD 11)
 set(tiger_link_libs "")
+set(tiger_test_libs "")
 
 option(CPU_ONLY "only use cpu" OFF)
 option(HAVE_CUDA "have_cuda" ON)
@@ -47,18 +48,22 @@ else()
 endif()
 
 
-
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/3rdparty/eigen)
 include_directories(${CMAKE_SOURCE_DIR}/3rdparty)
 include_directories(${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
-
 link_libraries(glog gflags leveldb)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/tiger tiger)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/benchmark benchmark)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/tiger tiger)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/benchmark benchmark)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/googletest/googletest)
+include_directories(${CMAKE_SOURCE_DIR}/3rdparty/googletest/googletest/include)
+list(APPEND tiger_test_libs PUBLIC gtest_main)
+list(APPEND tiger_test_libs PUBLIC tiger)
+add_subdirectory(${CMAKE_SOURCE_DIR}/test)
+
 add_subdirectory(tools)
 add_subdirectory(sample/mnist)
 add_subdirectory(sample/bdd100k)
