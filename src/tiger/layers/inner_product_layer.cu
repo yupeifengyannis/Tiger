@@ -5,6 +5,9 @@ namespace tiger{
 template <typename Dtype>
 void InnerProductLayer<Dtype>::forward_gpu(const vector<Blob<Dtype>* >& bottom,
 	const vector<Blob<Dtype>* >& top){
+    const Dtype* bottom_data = bottom[0]->gpu_data();
+    Dtype* top_data = top[0]->mutable_gpu_data();
+    const Dtype* weight = this->blobs_[0]->gpu_data();
 
 }
 

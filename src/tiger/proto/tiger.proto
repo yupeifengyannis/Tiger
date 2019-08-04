@@ -46,6 +46,7 @@ message LayerParameter{
     repeated BlobProto blobs = 6;
     optional TransformationParameter transform_param = 7;
     optional DataParameter data_param = 8;
+    optional InnerProductParameter inner_param = 9;
 }
 
 message TransformationParameter{
@@ -109,30 +110,12 @@ message FillerParameter{
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+message InnerProductParameter{
+    optional uint32 num_output = 1;
+    optional bool bias_term = 2 [default = true];
+    optional FillerParameter weight_filler = 3;
+    optional FillerParameter bias_filler = 4;
+    optional int32 axis = 5 [default = 1];
+    optional bool transpose = 6 [default = false];
+}
 

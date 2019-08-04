@@ -189,6 +189,37 @@ void test_tiger_gpu_gemv_trans(){
 
 }
 
+template <typename Dtype>
+void test_tiger_gpu_axpy(){
+    int N = 10;
+    Dtype alpha = 2;
+    Dtype* X = new Dtype[N];
+    Dtype* Y = new Dtype[N];
+    for(int i = 0; i < N; i++){
+	X[i] = i;
+	Y[i] = 0;
+    }
+    Dtype* d_X;
+    Dtype* d_Y;
+    cudaMalloc((Dtype**)&d_X, N * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_Y, N * sizeof(Dtype));
+    cudaMemcpy(d_X, X, N * sizeof(Dtype), cudaMemcpyDefault);
+    cudaMemcpy(d_Y, Y, N * sizeof(Dtype), cudaMemcpyDefault);
+    tiger::tiger_gpu_axpy(N, alpha, d_X, d_Y);
+    cudaMemcpy(Y, d_Y, N * sizeof(Dtype), cudaMemcpyDefault);
+    for(int i = 0; i < N; i++){
+	std::cout << Y[i] << std::endl;
+    }
+    
+    free(X);
+    free(Y);
+    cudaFree(d_X);
+    cudaFree(d_Y);
+
+}
+
+
+
 int main(){
     std::cout << "float no transpose no transpose" << std::endl;
     test_tiger_gpu_gemm_notrans<float>();
@@ -210,7 +241,10 @@ int main(){
     test_tiger_gpu_gemv_trans<float>();
     std::cout << "double transpose " << std::endl;
     test_tiger_gpu_gemv_trans<double>();
-
+    
+    std::cout << "test axpy function " << std::endl;
+    test_tiger_gpu_axpy<float>();
+    test_tiger_gpu_axpy<double>();
 }
 
 

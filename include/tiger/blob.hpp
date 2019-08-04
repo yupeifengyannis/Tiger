@@ -23,7 +23,7 @@ public:
     void reshape(const vector<int>& shape);
     void reshape(const BlobShape& shape);
     void reshape_like(const Blob& other);
-    
+    void show_matrix(int N, int C);
     inline string shape_string()const{
 	string ret;
 	for(int i = 0; i < shape_.size(); i++){
@@ -166,10 +166,7 @@ protected:
     std::vector<int> shape_;
     int count_;
     int capacity_;
-
 };
-
-
 }
 
 

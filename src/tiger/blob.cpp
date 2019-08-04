@@ -1,3 +1,4 @@
+#include <iostream>
 #include "tiger/blob.hpp"
 
 
@@ -42,6 +43,19 @@ void Blob<Dtype>::reshape(const BlobShape& shape){
 template <typename Dtype>
 void Blob<Dtype>::reshape_like(const Blob<Dtype>& other){
     reshape(other.shape());
+}
+
+template <typename Dtype>
+void Blob<Dtype>::show_matrix(int N, int C){
+    int h = height();
+    int w = width();
+    for(int i = 0; i < h; i++){
+	for(int j = 0; j < w; j++){
+	    std::cout << data_at(N, C, i, j) << " ";	
+	}
+	std::cout << std::endl;
+    }
+    std::cout << std::endl;
 }
 
 template <typename Dtype>

@@ -40,6 +40,12 @@ protected:
     virtual void backward_gpu(const vector<Blob<Dtype>* >& top,
 	    const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom) ;
 
+    int M_;
+    int N_;
+    int K_;
+    bool bias_term_;
+    Blob<Dtype> bias_multiplier_;
+    bool transpose_;
 };
 
 }

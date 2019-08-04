@@ -22,9 +22,10 @@ protected:
 
 template <typename Dtype>
 class ConstantFiller : public Filler<Dtype>{
+public:
     explicit ConstantFiller(const FillerParameter& param) : 
 	Filler<Dtype>(param){}
-    virtual void filld_data(Blob<Dtype>* blob) override{
+    virtual void fill_data(Blob<Dtype>* blob){
 	Dtype* data = blob->mutable_cpu_data();
 	const int count = blob->count();
 	const Dtype value = this->filler_param_.value();
@@ -37,6 +38,17 @@ class ConstantFiller : public Filler<Dtype>{
 };
 
 
+template <typename Dtype>
+inline Filler<Dtype>* get_filler(const FillerParameter& filler_param){
+    if("constant" == filler_param.type()){
+	return new ConstantFiller<Dtype>(filler_param);
+    }
+    else{
+	//TODO()
+	LOG(FATAL) << "filler type " << filler_param.type() << " is not existed";
+    }
+    
+}
 
 }
 

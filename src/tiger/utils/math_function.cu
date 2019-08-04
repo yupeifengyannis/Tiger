@@ -70,9 +70,20 @@ void tiger_gpu_gemv<double>(const CBLAS_TRANSPOSE TransA,
     cublasCreate(&cublas_handle);
     CUBLAS_CHECK(cublasDgemv(cublas_handle, cuTransA, N, M, &alpha,
 		A, N, x, 1, &beta, y, 1));
-
 }
 
+template <>
+void tiger_gpu_axpy<float>(const int N, const float alpha, const float* X, float* Y){
+    cublasHandle_t cublas_handle;
+    cublasCreate(&cublas_handle);
+    CUBLAS_CHECK(cublasSaxpy(cublas_handle, N, &alpha, X, 1, Y, 1));
+}
 
+template <>
+void tiger_gpu_axpy<double>(const int N, const double alpha, const double* X, double* Y){
+    cublasHandle_t cublas_handle;
+    cublasCreate(&cublas_handle);
+    CUBLAS_CHECK(cublasDaxpy(cublas_handle, N, &alpha, X, 1, Y, 1));
+}
 }
 

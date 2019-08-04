@@ -9,6 +9,16 @@ inline void tiger_memset(const size_t N, const int alpha, void* X){
     memset(X, alpha, N);
 }
 
+template <typename Dtype>
+inline void tiger_set(const int N, const Dtype data, void* X){
+    Dtype* Y = static_cast<Dtype*>(X);
+    for(int i = 0; i < N; i++){
+	Y[i] = data;
+    }
+}
+
+
+
 #ifndef CPU_ONLY
 void tiger_gpu_memcpy(const size_t N, const void* src, void* des);
 inline void tiger_gpu_memset(const size_t N, const int alpha, void* X){
