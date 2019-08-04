@@ -1,54 +1,48 @@
 #include <cuda_runtime.h>
 #include <cuda.h>
+#include <cblas.h>
 #include <iostream>
 #include "tiger/utils/math_function.hpp"
 
-__global__ void show_data(float* data, int N){
+template <typename Dtype>
+__global__ void show_data(Dtype* data, int N){
     int i = threadIdx.x;
     if(i < N){
 	printf("%f\n", data[i]);
     }
 }
-
-void test_tiger_gpu_gemm(){
+template <typename Dtype>
+void test_tiger_gpu_gemm_notrans(){
     // create host memory space and initialize
     int M = 5;
     int K = 4;
     int N = 3;
-    float* A = new float[M * K];
-    float* B = new float[K * N];
-    float* C = new float[M * N];
+    Dtype* A = new Dtype[M * K];
+    Dtype* B = new Dtype[K * N];
+    Dtype* C = new Dtype[M * N];
     for(int i = 0; i < M * K; i++){
 	A[i] = i + 1;
     }
     for(int i = 0; i < K * N; i++){
 	B[i] = i + 1;
     }
-    
-
+    for(int i = 0; i < M * N; i++){
+	C[i] = 0;
+    }
     // create device memory space and initialize
-    float* d_A;
-    float* d_B;
-    float* d_C;
-    cudaMalloc((float**)&d_A, M * K * sizeof(float));
-    cudaMalloc((float**)&d_B, K * N * sizeof(float));
-    cudaMalloc((float**)&d_C, M * N * sizeof(float));
-    cudaMemcpy(d_A, A, M * K * sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, B, K * N * sizeof(float), cudaMemcpyHostToDevice);
-    
-    show_data<<<1, 32>>>(d_A, M * K);
-    show_data<<<1, 32>>>(d_B, K * N);
-
-    float alpha = 1;
-    float beta = 1;
-    cublasHandle_t cublas_handle;
-    cublasCreate(&cublas_handle);
-    cublasSgemm_v2(cublas_handle, CUBLAS_OP_N, CUBLAS_OP_N,
-	    M, N, K, &alpha, d_A, M, d_B, K, &beta, d_C, M);
-    //tiger::tiger_gpu_gemm<float>(CblasNoTrans, CblasNoTrans, M, N, K,
-    //    float(1), d_A, d_B, float(1), d_C);
+    Dtype* d_A;
+    Dtype* d_B;
+    Dtype* d_C;
+    cudaMalloc((Dtype**)&d_A, M * K * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_B, K * N * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_C, M * N * sizeof(Dtype));
+    cudaMemcpy(d_A, A, M * K * sizeof(Dtype), cudaMemcpyDefault);
+    cudaMemcpy(d_B, B, K * N * sizeof(Dtype), cudaMemcpyDefault);
+    cudaMemcpy(d_C, C, M * N * sizeof(Dtype), cudaMemcpyDefault);
+    tiger::tiger_gpu_gemm<Dtype>(CblasNoTrans, CblasNoTrans, M, N, K,
+        Dtype(1), d_A, d_B, Dtype(1), d_C);
     // transfer data from device to host
-    cudaMemcpy(C, d_C, M * N * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(C, d_C, M * N * sizeof(Dtype), cudaMemcpyDefault);
     
     for(int i = 0; i < M; i++){
 	for(int j = 0; j < N; j++){
@@ -57,8 +51,170 @@ void test_tiger_gpu_gemm(){
 	std::cout << std::endl;
     }
     std::cout << std::endl;
+    cudaFree(d_A);
+    cudaFree(d_B);
+    cudaFree(d_C);
+    free(A);
+    free(B);
+    free(C);
+}
+template <typename Dtype>
+void test_tiger_gpu_gemm_trans(){
+    int M = 3;
+    int N = 2;
+    Dtype* A = new Dtype[M * N];
+    Dtype* B = new Dtype[M * N];
+    Dtype* C = new Dtype[M * M];
+    for(int i = 0; i < M * M; i++){
+	C[i] = 0;
+    }
+    for(int i = 0; i < M * N; i++){
+	A[i] = i;
+	B[i] = i;
+    }
+    // crate device memory space and initialize
+    Dtype* d_A;
+    Dtype* d_B;
+    Dtype* d_C;
+    cudaMalloc((Dtype**)&d_A, M * N * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_B, M * N * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_C, M * M * sizeof(Dtype));
+    cudaMemcpy(d_A, A, M * N * sizeof(Dtype), cudaMemcpyDefault);
+    cudaMemcpy(d_B, B, M * N * sizeof(Dtype), cudaMemcpyDefault);
+    // 记得要给d_C矩阵进行初始化
+    cudaMemcpy(d_C, C, M * M * sizeof(Dtype), cudaMemcpyDefault);
+    tiger::tiger_gpu_gemm<Dtype>(CblasNoTrans, CblasTrans, 3, 3, 2,
+	    Dtype(1), d_A, d_B, Dtype(1), d_C);
+    //transfer data from device to host
+    cudaMemcpy(C, d_C, M * M * sizeof(Dtype), cudaMemcpyDefault);
+    for(int i = 0; i < M; i++){
+	for(int j = 0; j < M; j++){
+	    std::cout << C[i * M + j] << " ";
+	}
+	std::cout << std::endl;
+    }
+    std::cout << std::endl;
+
+    // free host memroy sapce and device memroy space
+    free(A);
+    free(B);
+    free(C);
+    cudaFree(d_A);
+    cudaFree(d_B);
+    cudaFree(d_C);
+}
+
+template <typename Dtype>
+void test_tiger_gpu_gemv_notrans(){
+    int M = 3;
+    int N = 2;
+    Dtype* A = new Dtype[M * N];
+    Dtype* x = new Dtype[N];
+    Dtype* y = new Dtype[M];
+    for(int i = 0; i < M * N; i++){
+	A[i] = i;
+    }
+    for(int i = 0; i < N; i++){
+	x[i] = i;
+    }
+    for(int i = 0; i < M; i++){
+	y[i] = 0;
+    }
+    //create device memory space and initialize
+    Dtype* d_A;
+    Dtype* d_x;
+    Dtype* d_y;
+    cudaMalloc((Dtype**)&d_A, M * N * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_x, N * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_y, M * sizeof(Dtype));
+    cudaMemcpy(d_A, A, M * N * sizeof(Dtype), cudaMemcpyDefault);
+    cudaMemcpy(d_x, x, N * sizeof(Dtype), cudaMemcpyDefault);
+    cudaMemcpy(d_y, y, M * sizeof(Dtype), cudaMemcpyDefault);
+    tiger::tiger_gpu_gemv<Dtype>(CblasNoTrans, M, N, Dtype(1), d_A, d_x, Dtype(1), d_y);
+    //transfer data from device to host
+    cudaMemcpy(y, d_y, M * sizeof(Dtype), cudaMemcpyDefault);
+    for(int i = 0; i < M; i++){
+	std::cout << y[i] << " ";
+    }
+    std::cout << std::endl;
+    free(A);
+    free(x);
+    free(y);
+    cudaFree(d_A);
+    cudaFree(d_x);
+    cudaFree(d_y);
+
+}
+
+
+template <typename Dtype>
+void test_tiger_gpu_gemv_trans(){
+    int M = 3;
+    int N = 2;
+    Dtype* A = new Dtype[M * N];
+    Dtype* x = new Dtype[M];
+    Dtype* y = new Dtype[N];
+    for(int i = 0; i < M * N; i++){
+	A[i] = i;
+    }
+    for(int i = 0; i < M; i++){
+	x[i] = i;
+    }
+    for(int i = 0; i < N; i++){
+	y[i] = 0;
+    }
+    //create device memory space and initialize
+    Dtype* d_A;
+    Dtype* d_x;
+    Dtype* d_y;
+    cudaMalloc((Dtype**)&d_A, M * N * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_x, M * sizeof(Dtype));
+    cudaMalloc((Dtype**)&d_y, N * sizeof(Dtype));
+    cudaMemcpy(d_A, A, M * N * sizeof(Dtype), cudaMemcpyDefault);
+    cudaMemcpy(d_x, x, M * sizeof(Dtype), cudaMemcpyDefault);
+    cudaMemcpy(d_y, y, N * sizeof(Dtype), cudaMemcpyDefault);
+    tiger::tiger_gpu_gemv<Dtype>(CblasTrans, M, N, Dtype(1), d_A, d_x, Dtype(1), d_y);
+    //transfer data from device to host
+    cudaMemcpy(y, d_y, N * sizeof(Dtype), cudaMemcpyDefault);
+    for(int i = 0; i < N; i++){
+	std::cout << y[i] << " ";
+    }
+    std::cout << std::endl;
+    free(A);
+    free(x);
+    free(y);
+    cudaFree(d_A);
+    cudaFree(d_x);
+    cudaFree(d_y);
+
 }
 
 int main(){
-    test_tiger_gpu_gemm();
+    std::cout << "float no transpose no transpose" << std::endl;
+    test_tiger_gpu_gemm_notrans<float>();
+    std::cout << "double no transpose no transpose " << std::endl;
+    test_tiger_gpu_gemm_notrans<double>();
+    std::cout << "float no transpose transpose " << std::endl;
+    test_tiger_gpu_gemm_trans<float>();
+    std::cout << "double no transpose transpose " << std::endl;
+    test_tiger_gpu_gemm_trans<double>();
+    
+    std::cout << "test sgemm function " << std::endl;
+    std::cout << "float no transpose" << std::endl;
+    test_tiger_gpu_gemv_notrans<float>();
+    
+    std::cout << "double no transpose " << std::endl;
+    test_tiger_gpu_gemv_notrans<double>();
+
+    std::cout << "float transpose " << std::endl;
+    test_tiger_gpu_gemv_trans<float>();
+    std::cout << "double transpose " << std::endl;
+    test_tiger_gpu_gemv_trans<double>();
+
 }
+
+
+
+
+
+
