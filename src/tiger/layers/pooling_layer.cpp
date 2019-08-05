@@ -29,7 +29,49 @@ void PoolingLayer<Dtype>::layer_setup(const vector<Blob<Dtype>* >& bottom,
 template <typename Dtype>
 void PoolingLayer<Dtype>::reshape(const vector<Blob<Dtype>* >& bottom,
 	const vector<Blob<Dtype>* >& top){
-
+    CHECK_EQ(bottom[0]->num_axes(), 4) << "input must have 4 aexs";
+    channels_ = bottom[0]->channels();
+    height_ = bottom[0]->height();
+    width_ = bottom[0]->width();
+    switch(round_mode_){
+	case PoolingParameter_RoundMode_CEIL:
+	    pooled_height_ = static_cast<int>(ceil(static_cast<float>(
+			    height_ + 2 * pad_h_ - kernel_h_) / stride_h_)) + 1;
+	    pooled_width_ = static_cast<int>(ceil(static_cast<float>(
+			    width_ + 2 * pad_w_ - kernel_w_)  / stride_w_)) + 1;
+	    break;
+	case PoolingParameter_RoundMode_FLOOR:
+	    pooled_height_ = static_cast<int>(floor(static_cast<float>(
+			    height_ + 2 * pad_h_ - kernel_h_) / stride_h_)) + 1;
+	    pooled_width_ = static_cast<int>(floor(static_cast<float>(
+			    width_ + 2 * pad_w_ - kernel_w_)  / stride_w_)) + 1;
+	    break;
+	default:
+	    LOG(FATAL) << "unkown rounding mode";
+	    break;
+    }	
+    
+    if(pad_h_ || pad_w_){
+	if((pooled_height_ - 1) * stride_h_ >= height_ + pad_h_){
+	    pooled_height_--;
+	}
+	if((pooled_width_ - 1) * stride_w_ >= width_ + pad_w_){
+	    pooled_width_--;
+	}
+    }
+    
+    top[0]->reshape(bottom[0]->num(), channels_, pooled_height_, pooled_width_);
+    if(top.size() > 1){
+	top[1]->reshape_like(*top[0]);
+    }
+    if(this->layer_param_.pooling_param().method() == 
+	    PoolingParameter_PoolMethod_MAX){
+	this->max_idx_.reshape_like(*top[0]);
+    }
+    if(this->layer_param_.pooling_param().method() == 
+	    PoolingParameter_PoolMethod_STOCHASTIC){
+	this->rand_idx_.reshape_like(*top[0]);
+    }
 }
 
 

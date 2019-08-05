@@ -7,6 +7,7 @@ set(tiger_test_libs "")
 
 option(CPU_ONLY "only use cpu" OFF)
 option(HAVE_CUDA "have_cuda" ON)
+option(USE_CUDNN "use cudnn" ON)
 if(CPU_ONLY)
     add_definitions(-DCPU_ONLY)
     set(HAVE_CUDA OFF)
@@ -54,7 +55,9 @@ include_directories(${CMAKE_SOURCE_DIR}/3rdparty)
 include_directories(${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 link_libraries(glog gflags leveldb)
-
+if(USE_CUDNN)
+    link_libraries(cudnn)
+endif()
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/tiger tiger)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/benchmark benchmark)
 

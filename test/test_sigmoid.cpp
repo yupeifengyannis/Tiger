@@ -1,11 +1,11 @@
 #include <glog/logging.h>
 #include <iostream>
 #include "tiger/layers/sigmoid_layer.hpp"
+#include "tiger/layers/cudnn_sigmoid_layer.hpp"
 #include "tiger/tiger.pb.h"
 #include "tiger/common.hpp"
 
 using namespace tiger;
-
 void test_sigmoid_reshape(Layer<float>* layer, vector<Blob<float>* >& bottom_vec,
 	vector<Blob<float>* >& top_vec){
     LOG(INFO) << "before layer setup";
@@ -30,7 +30,6 @@ void test_sigmoid_forward(Layer<float>* layer, const vector<Blob<float>* >& bott
     
 }
 
-
 void test_sigmoid_backward(Layer<float>* layer, const vector<Blob<float>* >& top_vec,
 	const vector<bool>& propagate_down, const vector<Blob<float>* >& bottom_vec){
     Tiger::set_mode(Tiger::GPU);
@@ -48,27 +47,26 @@ void test_sigmoid_backward(Layer<float>* layer, const vector<Blob<float>* >& top
     std::cout << std::endl;
 }
 
-
-
 int main(){
     LayerParameter layer_param;
-    std::vector<int> shape_data{1,4};
+    std::vector<int> shape_data{1,1,1,4};
     Blob<float> bottom_data(shape_data);
     Blob<float> top_data;
     std::vector<Blob<float>* > bottom_vec;
     bottom_vec.push_back(&bottom_data);
     std::vector<Blob<float>* > top_vec;
     top_vec.push_back(&top_data);
-    tiger::SigmoidLayer<float> sigmoid_layer(layer_param);
-    test_sigmoid_reshape(&sigmoid_layer, bottom_vec, top_vec);
+    std::shared_ptr<Layer<float> > sigmoid_layer;
+    sigmoid_layer.reset(new CuDNNSigmoidLayer<float>(layer_param));
+    // sigmoid_layer.reset(new SigmoidLayer<float>(layer_param));
     int count = bottom_data.count();
     float* data = bottom_data.mutable_cpu_data();
     for(int i = 0; i < count; i++){
 	data[i] = 1;
     }
-    test_sigmoid_forward(&sigmoid_layer, bottom_vec, top_vec);
+    test_sigmoid_reshape(&*sigmoid_layer, bottom_vec, top_vec);
+    test_sigmoid_forward(&*sigmoid_layer, bottom_vec, top_vec);
     std::vector<bool> propagate_down{true};
-    test_sigmoid_backward(&sigmoid_layer, top_vec,
+    test_sigmoid_backward(&*sigmoid_layer, top_vec,
 	    propagate_down, bottom_vec);
-
 }

@@ -15,7 +15,6 @@ public:
     virtual inline const char* type() const override{
 	return "Sigmoid";
     }
-    
 protected:
     virtual void forward_cpu(const vector<Blob<Dtype>* >& bottom, 
 	    const vector<Blob<Dtype>* >& top) override;
@@ -28,7 +27,6 @@ protected:
 
     virtual void backward_gpu(const vector<Blob<Dtype>* >& top,
 	    const vector<bool>& propagate_down, const vector<Blob<Dtype>* >& bottom) override;
-    
 
 };
 

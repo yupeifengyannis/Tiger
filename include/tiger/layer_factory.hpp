@@ -86,7 +86,6 @@ public:
 	return std::shared_ptr<Layer<Dtype> >(new type##Layer<Dtype>(param));\
     }\
     REGISTER_LAYER_CREATOR(type, creator_##type##layer)
-
 }
 
 
