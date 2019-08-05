@@ -48,6 +48,7 @@ message LayerParameter{
     optional DataParameter data_param = 8;
     optional InnerProductParameter inner_param = 9;
     optional PoolingParameter pooling_param = 11;
+    optional ReLUParameter relu_param = 12;
 }
 
 message TransformationParameter{
@@ -142,6 +143,10 @@ message PoolingParameter{
 
 }
 
+message ReLUParameter{
+// 这个如果不等于0的话应该是Leaky ReLU吧
+optional float negative_slop = 1 [default = 0];
+}
 
 
 

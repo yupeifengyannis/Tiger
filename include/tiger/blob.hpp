@@ -22,7 +22,7 @@ public:
     explicit Blob(const vector<int>& shape);
     void reshape(const vector<int>& shape);
     void reshape(const BlobShape& shape);
-    void reshape_like(const Blob& other);
+    void reshape_like(const Blob<Dtype>& other);
     void show_matrix(int N, int C);
     inline string shape_string()const{
 	string ret;

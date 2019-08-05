@@ -60,19 +60,40 @@ void PoolingLayer<Dtype>::reshape(const vector<Blob<Dtype>* >& bottom,
 	}
     }
     
-    top[0]->reshape(bottom[0]->num(), channels_, pooled_height_, pooled_width_);
+    top[0]->reshape(std::vector<int>{bottom[0]->num(), channels_, pooled_height_, pooled_width_});
     if(top.size() > 1){
 	top[1]->reshape_like(*top[0]);
     }
     if(this->layer_param_.pooling_param().method() == 
 	    PoolingParameter_PoolMethod_MAX){
-	this->max_idx_.reshape_like(*top[0]);
+	this->max_idx_.reshape(std::vector<int>{bottom[0]->num(), 
+	channels_, pooled_height_, pooled_width_});
     }
     if(this->layer_param_.pooling_param().method() == 
 	    PoolingParameter_PoolMethod_STOCHASTIC){
 	this->rand_idx_.reshape_like(*top[0]);
     }
 }
+
+template <typename Dtype>
+void PoolingLayer<Dtype>::forward_cpu(const vector<Blob<Dtype>* >& bottom,
+	const vector<Blob<Dtype>* >& top){
+    // TODO()
+}
+
+template <typename Dtype>
+void PoolingLayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& top,
+	const vector<bool>& propagate_down,
+	const vector<Blob<Dtype>* >& bottom){
+    // TODO()
+}
+
+template class PoolingLayer<float>;
+template class PoolingLayer<double>;
+
+
+
+
 
 
 }
