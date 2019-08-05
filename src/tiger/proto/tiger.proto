@@ -47,6 +47,7 @@ message LayerParameter{
     optional TransformationParameter transform_param = 7;
     optional DataParameter data_param = 8;
     optional InnerProductParameter inner_param = 9;
+    optional PoolingParameter pooling_param = 11;
 }
 
 message TransformationParameter{
@@ -118,4 +119,68 @@ message InnerProductParameter{
     optional int32 axis = 5 [default = 1];
     optional bool transpose = 6 [default = false];
 }
+
+message PoolingParameter{
+    enum PoolMethod{
+	MAX = 0;
+	AVE = 1;
+	STOCHASTIC = 2;
+    }
+    optional PoolMethod method = 1 [default = MAX];
+    optional uint32 pad_h = 2 [default = 0];
+    optional uint32 pad_w = 3 [default = 0];
+    optional uint32 kernel_h = 4;
+    optional uint32 kernel_w = 5;
+    optional uint32 stride_h = 6;
+    optional uint32 stride_w = 7;
+    
+    enum RoundMode{
+	CEIL = 0;
+	FLOOR = 1;
+    }
+    optional RoundMode round_mode = 8 [default = CEIL];
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

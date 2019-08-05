@@ -11,15 +11,10 @@ int main(){
     LayerParameter data_layer_param;
     tiger::read_proto_from_text_file_or_die(path, &data_layer_param);
     DataLayer<float> data_layer(data_layer_param);
-    
     std::vector<Blob<float>* > bottom;
     std::vector<Blob<float>* > top;
     Blob<float>* blob_ptr = new Blob<float>();
     top.push_back(blob_ptr);
-    
     data_layer.setup(bottom, top);
-
-
-
 }
 

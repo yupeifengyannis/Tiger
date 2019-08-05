@@ -37,11 +37,28 @@ public:
     }
 };
 
+template <typename Dtype>
+class SerialFiller : public Filler<Dtype>{
+public:
+    explicit SerialFiller(const FillerParameter& param) : 
+	Filler<Dtype>(param){}
+    virtual void fill_data(Blob<Dtype>* blob){
+	Dtype* data = blob->mutable_cpu_data();
+	const int count = blob->count();
+	for(int i = 0; i < count; i++){
+	    data[i] = i;
+	}
+    }
+};
+
 
 template <typename Dtype>
 inline Filler<Dtype>* get_filler(const FillerParameter& filler_param){
     if("constant" == filler_param.type()){
 	return new ConstantFiller<Dtype>(filler_param);
+    }
+    else if("serial" == filler_param.type()){
+	return new SerialFiller<Dtype>(filler_param);
     }
     else{
 	//TODO()
