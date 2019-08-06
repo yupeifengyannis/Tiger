@@ -57,8 +57,8 @@ int main(){
     std::vector<Blob<float>* > top_vec;
     top_vec.push_back(&top_data);
     std::shared_ptr<Layer<float> > sigmoid_layer;
-    sigmoid_layer.reset(new CuDNNSigmoidLayer<float>(layer_param));
-    // sigmoid_layer.reset(new SigmoidLayer<float>(layer_param));
+    // sigmoid_layer.reset(new CuDNNSigmoidLayer<float>(layer_param));
+    sigmoid_layer.reset(new SigmoidLayer<float>(layer_param));
     int count = bottom_data.count();
     float* data = bottom_data.mutable_cpu_data();
     for(int i = 0; i < count; i++){

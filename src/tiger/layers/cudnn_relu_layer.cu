@@ -17,9 +17,9 @@ void CuDNNReLULayer<Dtype>::forward_gpu(const vector<Blob<Dtype>* >& bottom,
 		top_data));
 }
 template <typename Dtype>
-void CuDNNReLULayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& bottom,
+void CuDNNReLULayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& top,
 	const vector<bool>& propagate_down, 
-	const vector<Blob<Dtype>* >& top){
+	const vector<Blob<Dtype>* >& bottom){
     LOG(INFO) << "invoking backward gpu ";
     if(!propagate_down[0]){
 	return;
