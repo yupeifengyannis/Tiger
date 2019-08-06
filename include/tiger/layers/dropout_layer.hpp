@@ -34,7 +34,7 @@ protected:
 	    const vector<Blob<Dtype>* >& bottom);
     
     Blob<unsigned int> rand_vec_;
-    Dtype threshhold_;
+    Dtype threshold_;
     Dtype scale_;
     unsigned int uint_thres_;
 

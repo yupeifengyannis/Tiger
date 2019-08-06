@@ -148,7 +148,9 @@ message ReLUParameter{
 optional float negative_slop = 1 [default = 0];
 }
 
-
+message DropoutParameter{
+    optional float dropout_ratio = 1 [default = 0.5];
+}
 
 
 
