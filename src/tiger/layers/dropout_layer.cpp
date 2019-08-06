@@ -21,6 +21,4 @@ void DropoutLayer<Dtype>::reshape(const vector<Blob<Dtype>* >& bottom,
     NeuronLayer<Dtype>::reshape(bottom, top);
     rand_vec_.reshape(*bottom[0]);
 }
-
-
 }
