@@ -36,6 +36,4 @@ void ReLULayer<Dtype>::backward_cpu(const vector<Blob<Dtype>* >& top,
 
 template class ReLULayer<float>;
 template class ReLULayer<double>;
-
-
 }
