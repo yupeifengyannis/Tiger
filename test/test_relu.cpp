@@ -1,6 +1,6 @@
 #include "tiger/blob.hpp"
-#include "tiger/layers/relu_layer.hpp"
-#include "tiger/layers/cudnn_relu_layer.hpp"
+#include "tiger/layers/neuron/relu_layer.hpp"
+#include "tiger/layers/cudnn/cudnn_relu_layer.hpp"
 #include "tiger/filler.hpp"
 #include "tiger/tiger.pb.h"
 #include "tiger/common.hpp"

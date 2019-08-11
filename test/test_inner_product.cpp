@@ -1,6 +1,6 @@
 #include <vector>
 #include "tiger/blob.hpp"
-#include "tiger/layers/inner_product_layer.hpp"
+#include "tiger/layers/neuron/inner_product_layer.hpp"
 #include "tiger/tiger.pb.h"
 #include "tiger/common.hpp"
 #include "tiger/filler.hpp"

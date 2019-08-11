@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include "tiger/layers/data_layer.hpp"
+#include "tiger/layers/data/data_layer.hpp"
 #include "tiger/utils/io.hpp"
 #include "tiger/blob.hpp"
 

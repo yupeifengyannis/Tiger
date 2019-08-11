@@ -1,6 +1,6 @@
 #include "tiger/blob.hpp"
-#include "tiger/layers/tanh_layer.hpp"
-#include "tiger/layers/cudnn_tanh_layer.hpp"
+#include "tiger/layers/neuron/tanh_layer.hpp"
+#include "tiger/layers/cudnn/cudnn_tanh_layer.hpp"
 #include "tiger/filler.hpp"
 #include "tiger/tiger.pb.h"
 #include "tiger/common.hpp"

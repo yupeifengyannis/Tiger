@@ -86,6 +86,13 @@ inline const char* curandGetErrorString(curandStatus_t error) {
 	CHECK_EQ(status, CUBLAS_STATUS_SUCCESS) << " "\
 	<< cublasGetErrorString(status);\
     }while(0)
+#define CURAND_CHECK(condition)\
+    do{\
+	curandStatus_t status = condition; \
+	CHECK_EQ(status, CURAND_STATUS_SUCCESS) << " "\
+	<< curandGetErrorString(status); \
+    }while(0)
+
 
 
 const int CUDA_NUM_THREADS = 512;

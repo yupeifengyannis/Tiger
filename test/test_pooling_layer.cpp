@@ -1,4 +1,4 @@
-#include "tiger/layers/pooling_layer.hpp"
+#include "tiger/layers/conv/pooling_layer.hpp"
 void test_layer_setup(){
 }
 

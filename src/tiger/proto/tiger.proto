@@ -49,6 +49,8 @@ message LayerParameter{
     optional InnerProductParameter inner_param = 9;
     optional PoolingParameter pooling_param = 11;
     optional ReLUParameter relu_param = 12;
+    optional DropoutParameter drop_param = 13;
+    optional SoftmaxParameter softmax_param = 14;
 }
 
 message TransformationParameter{
@@ -152,7 +154,9 @@ message DropoutParameter{
     optional float dropout_ratio = 1 [default = 0.5];
 }
 
-
+message SoftmaxParameter{
+optional int32 axis = 1 [default = 1];
+}
 
 
 

@@ -17,7 +17,9 @@ inline void tiger_set(const int N, const Dtype data, void* X){
     }
 }
 
-
+// 伯努利分布其实就是0-1分布
+template <typename Dtype>
+void tiger_rng_bernoulli(const int n, const Dtype p, int* r);
 
 #ifndef CPU_ONLY
 void tiger_gpu_memcpy(const size_t N, const void* src, void* des);
@@ -44,6 +46,18 @@ void tiger_gpu_axpy(const int N, const Dtype alpha, const Dtype* X, Dtype* Y);
 
 template <typename Dtype>
 void tiger_gpu_axpby(const int N, const Dtype alpha, const Dtype* X, const Dtype beta, Dtype* Y);
+
+void tiger_gpu_rng_uniform(const int n, unsigned int* r);
+
+template <typename Dtype>
+void tiger_gpu_rng_uniform(const int n, const Dtype a, const Dtype b, Dtype* r);
+
+template <typename Dtype>
+void tiger_gpu_scal(const int N, const Dtype alpha, Dtype* X);
+
+template <typename Dtype>
+void tiger_gpu_add_scalar(const int N, const Dtype alpha, Dtype* Y);
+
 
 #endif
 

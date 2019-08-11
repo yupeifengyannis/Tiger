@@ -1,7 +1,7 @@
 #include <glog/logging.h>
 #include <iostream>
-#include "tiger/layers/sigmoid_layer.hpp"
-#include "tiger/layers/cudnn_sigmoid_layer.hpp"
+#include "tiger/layers/neuron/sigmoid_layer.hpp"
+#include "tiger/layers/cudnn/cudnn_sigmoid_layer.hpp"
 #include "tiger/tiger.pb.h"
 #include "tiger/common.hpp"
 
