@@ -218,6 +218,12 @@ void test_tiger_gpu_axpy(){
 
 }
 
+template <typename Dtype>
+void test_dot(){
+    std::vector<int> shape_vec{2,2,2,2};
+
+}
+
 
 
 int main(){
@@ -245,6 +251,9 @@ int main(){
     std::cout << "test axpy function " << std::endl;
     test_tiger_gpu_axpy<float>();
     test_tiger_gpu_axpy<double>();
+    
+    test_dot<float>();
+
 }
 
 

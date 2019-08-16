@@ -78,5 +78,6 @@ void InnerProductLayer<Dtype>::backward_cpu(const vector<Blob<Dtype>* >& top,
 template class InnerProductLayer<float>;
 template class InnerProductLayer<double>;
 
+REGISTER_LAYER_CLASS(InnerProduct);
 
 }

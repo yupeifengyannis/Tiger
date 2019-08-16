@@ -1,6 +1,8 @@
 #include "tiger/blob.hpp"
 #include "tiger/layers/neuron/relu_layer.hpp"
+#ifdef USE_CUDNN
 #include "tiger/layers/cudnn/cudnn_relu_layer.hpp"
+#endif
 #include "tiger/filler.hpp"
 #include "tiger/tiger.pb.h"
 #include "tiger/common.hpp"
@@ -61,7 +63,9 @@ void test(){
     top_vec.push_back(&top_data);
     std::vector<bool> propagate_down{true}; 
     std::shared_ptr<Layer<Dtype> > layer;
-    layer.reset(new CuDNNReLULayer<Dtype>(layer_param));
+#ifdef USE_CUDNN
+    layer.reset(new ReLULayer<Dtype>(layer_param));
+#endif
     test_setup<Dtype>(layer.get(), bottom_vec, top_vec);
     test_forward<Dtype>(layer.get(), bottom_vec, top_vec);
     test_backward<Dtype>(layer.get(), top_vec, propagate_down, bottom_vec);

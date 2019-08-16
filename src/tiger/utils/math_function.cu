@@ -85,16 +85,6 @@ void tiger_gpu_axpy<double>(const int N, const double alpha, const double* X, do
     cublasCreate(&cublas_handle);
     CUBLAS_CHECK(cublasDaxpy(cublas_handle, N, &alpha, X, 1, Y, 1));
 }
-
-
-void tiger_gpu_rng_uniform(const int n, unsigned int* r){
-    curandGenerator_t curand_generator;
-    curandCreateGenerator(&curand_generator, CURAND_RNG_PSEUDO_MTGP32);
-    CURAND_CHECK(curandGenerate(curand_generator, r, n));
-}
-
-
-
 template <>
 void tiger_gpu_scal<float>(const int N, const float alpha, float *X) {
     cublasHandle_t cublas_handle;
@@ -108,6 +98,30 @@ void tiger_gpu_scal<double>(const int N, const double alpha, double *X) {
     cublasCreate(&cublas_handle);
     CUBLAS_CHECK(cublasDscal(cublas_handle, N, &alpha, X, 1));
 }
+
+template <>
+void tiger_gpu_axpby<float>(const int N, const float alpha, const float* X,
+const float beta, float* Y) {
+    tiger_gpu_scal<float>(N, beta, Y);
+    tiger_gpu_axpy<float>(N, alpha, X, Y);
+}
+
+template <>
+void tiger_gpu_axpby<double>(const int N, const double alpha, const double* X,
+const double beta, double* Y) {
+    tiger_gpu_scal<double>(N, beta, Y);
+    tiger_gpu_axpy<double>(N, alpha, X, Y);
+}
+
+
+void tiger_gpu_rng_uniform(const int n, unsigned int* r){
+    curandGenerator_t curand_generator;
+    curandCreateGenerator(&curand_generator, CURAND_RNG_PSEUDO_MTGP32);
+    CURAND_CHECK(curandGenerate(curand_generator, r, n));
+}
+
+
+
 
 template <typename Dtype>
 __global__ void add_scalar_kernel(const int n, const Dtype alpha, Dtype* y){
@@ -157,6 +171,42 @@ double* r) {
 	tiger_gpu_add_scalar(n, a, r);
     }
 }
+
+
+template <>
+void tiger_gpu_dot<float>(const int N, const float* x, const float* y, float* out){
+    cublasHandle_t cublas_handle;
+    cublasCreate(&cublas_handle);
+    CUBLAS_CHECK(cublasSdot(cublas_handle, N, x, 1, y, 1, out)); 
+}
+
+template <>
+void tiger_gpu_dot<double>(const int N, const double* x, const double* y, double* out){
+    cublasHandle_t cublas_handle;
+    cublasCreate(&cublas_handle);
+    CUBLAS_CHECK(cublasDdot(cublas_handle, N, x, 1, y, 1, out));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

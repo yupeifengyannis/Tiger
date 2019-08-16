@@ -43,5 +43,4 @@ void CuDNNReLULayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& top,
 }   
 template class CuDNNReLULayer<float>;
 template class CuDNNReLULayer<double>;
-
 }

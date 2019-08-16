@@ -1,5 +1,5 @@
-#ifndef TIGER_LAYER_FACTORY_HPP
-#define TIGER_LAYER_FACTORY_HPP
+#ifndef TIGER_SOLVER_FACTORY_HPP
+#define TIGER_SOLVER_FACTORY_HPP
 
 #include <map>
 #include <memory>
@@ -70,22 +70,22 @@ private:
 template <typename Dtype>
 class SolverRegisterer{
 public:
-    typedef std::shared_ptr<Solver<Dtype> > (*Creator)(const SolverParameter);
+    typedef std::shared_ptr<Solver<Dtype> > (*Creator)(const SolverParameter&);
     SolverRegisterer(const string& type, Creator creator){
 	SolverRegistry<Dtype>::add_creator(type, creator);
     }
 };
 
-#define REGISTER_LAYER_CREATOR(type, creator)\
+#define REGISTER_SOLVER_CREATOR(type, creator)\
     static SolverRegisterer<float> g_creator_f##type(#type, creator<float>)\
-    static SolverRegisterer<double> g_creator_g##type(#type, creator<double>)\
+    static SolverRegisterer<double> g_creator_d##type(#type, creator<double>)\
 
-#define REGISTER_LAYER_CLASS(type)\
+#define REGISTER_SOLVER_CLASS(type)\
     template <typename Dtype>\
     std::shared_ptr<Solver<Dtype> > creator_##type##solver(const SolverParameter& param){\
 	return std::shared_ptr<Solver<Dtype> >(new type##Solver<Dtype>(param));\
     }\
-    REGISTER_LAYER_CREATOR(type, creator_##type##solver)
+    REGISTER_SOLVER_CREATOR(type, creator_##type##solver)
 
 }
 

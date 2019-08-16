@@ -73,7 +73,6 @@ void BasePrefetchingDataLayer<Dtype>::forward_cpu(const vector<Blob<Dtype>* >& b
 	top[1]->set_cpu_data(prefetch_current_->label_.mutable_cpu_data());
     }
 }
-
 template <typename Dtype>
 void BasePrefetchingDataLayer<Dtype>::forward_gpu(const vector<Blob<Dtype>* >& bottom,
 	const vector<Blob<Dtype>* >& top){
@@ -88,7 +87,6 @@ void BasePrefetchingDataLayer<Dtype>::forward_gpu(const vector<Blob<Dtype>* >& b
 	top[1]->set_gpu_data(prefetch_current_->label_.mutable_gpu_data());
     }
 }
-
 
 template class BasePrefetchingDataLayer<float>;
 template class BasePrefetchingDataLayer<double>;

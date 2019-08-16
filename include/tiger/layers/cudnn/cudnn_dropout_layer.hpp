@@ -1,9 +1,7 @@
 #ifndef TIGER_LAYERS_CUDNN_CUDNN_DROPOUT_LAYER_HPP
 #define TIGER_LAYERS_CUDNN_CUDNN_DROPOUT_LAYER_HPP
-
 #include "tiger/layers/neuron/dropout_layer.hpp"
 #include "tiger/utils/cudnn.hpp"
-
 namespace tiger{
 
 template <typename Dtype>
@@ -34,7 +32,5 @@ protected:
 };
 
 }
-
-
 
 #endif

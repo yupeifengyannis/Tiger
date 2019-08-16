@@ -3,9 +3,6 @@
 
 namespace tiger{
 
-
-
-
 template <typename Dtype>
 __global__ void dropout_forward_kernel(const int n, const Dtype* in, const unsigned int* mask,
     const unsigned int threshold, const float scale, Dtype* out){
@@ -25,8 +22,8 @@ void DropoutLayer<Dtype>::forward_gpu(const vector<Blob<Dtype>* >& bottom,
     if(this->phase_ == TRAIN){
 	unsigned int* mask = static_cast<unsigned int*>(this->rand_vec_.mutable_gpu_data());
 	tiger_gpu_rng_uniform(count, mask);
-	dropout_forward_kernel<Dtype><<<GET_BLOCKS(count), CUDA_NUM_THREADS>>>(count, bottom,
-		mask, uint_thres_, scale_, top_data);
+	dropout_forward_kernel<Dtype><<<GET_BLOCKS(count), CUDA_NUM_THREADS>>>(
+		count, bottom_data, mask, uint_thres_, scale_, top_data);
     }
     else{
 	for(int i = 0; i < count; i++){
@@ -51,8 +48,8 @@ void DropoutLayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& top,
     if(!propagate_down[0]){
 	return;
     }
-    const Dtype top_diff = top[0]->gpu_diff();
-    Dtype* bottom_diff = bottom[0]->gpu_diff();
+    const Dtype* top_diff = top[0]->gpu_diff();
+    Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
     const unsigned int* mask = rand_vec_.gpu_data();
     const int count = bottom[0]->count();
     if(this->phase_ == TRAIN){
@@ -66,6 +63,7 @@ void DropoutLayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& top,
     }
 }
 
-
+template class DropoutLayer<float>;
+template class DropoutLayer<double>;
 
 }

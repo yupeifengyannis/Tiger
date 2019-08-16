@@ -1,6 +1,5 @@
 #ifndef TIGER_LAYERS_CUDNN_RELU_LAYER_HPP
 #define TIGER_LAYERS_CUDNN_RELU_LAYER_HPP
-
 #include "tiger/layers/neuron/relu_layer.hpp"
 #include "tiger/utils/cudnn.hpp"
 

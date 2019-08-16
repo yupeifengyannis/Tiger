@@ -65,6 +65,7 @@ public:
 	return get().mode_;
     }
 protected:
+    // static std::shared_ptr<Tiger> instance_;
     Brew mode_;
     std::shared_ptr<RNG> random_generator_;
 #ifndef CPU_ONLY

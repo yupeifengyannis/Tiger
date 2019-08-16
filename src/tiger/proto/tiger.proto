@@ -9,8 +9,15 @@ message SolverParameter{
     optional string type = 40 [default = "SGD"];
 }
 
-message NetParameter{
+message NetState{
+    optional Phase phase = 1;
 
+}
+
+message NetParameter{
+    optional string name = 1;
+    repeated LayerParameter layer = 2;
+    optional NetState state = 3;
 }
 
 message BlobShape{
@@ -33,6 +40,11 @@ enum Phase{
     TRAIN = 0;
     TEST = 1;
 }
+
+enum Backend{
+    TIGER = 0;
+    CUDNN = 1;
+}
 message LayerParameter{
     optional string name = 1;
     optional string type = 2;
@@ -40,6 +52,7 @@ message LayerParameter{
     repeated string top = 4;
 
     optional Phase phase = 10;
+    optional Backend backend = 190 [default = TIGER];
 
     repeated float loss_weight = 5;
 
@@ -157,41 +170,4 @@ message DropoutParameter{
 message SoftmaxParameter{
 optional int32 axis = 1 [default = 1];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

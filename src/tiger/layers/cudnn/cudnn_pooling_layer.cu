@@ -1,7 +1,5 @@
 #include "tiger/layers/cudnn/cudnn_pooling_layer.hpp"
-
 namespace tiger{
-
 template <typename Dtype>
 void CuDNNPoolingLayer<Dtype>::forward_gpu(const vector<Blob<Dtype>* >& bottom,
 	const vector<Blob<Dtype>* >& top){
@@ -16,7 +14,6 @@ void CuDNNPoolingLayer<Dtype>::forward_gpu(const vector<Blob<Dtype>* >& bottom,
 		top_desc_,
 		top_data));
 }
-
 template <typename Dtype>
 void CuDNNPoolingLayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& top,
 	const vector<bool>& propagate_down,
@@ -44,6 +41,4 @@ void CuDNNPoolingLayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& top,
 
 template class CuDNNPoolingLayer<float>;
 template class CuDNNPoolingLayer<double>;
-
-
 }

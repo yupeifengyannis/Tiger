@@ -82,7 +82,7 @@ void PoolingLayer<Dtype>::forward_cpu(const vector<Blob<Dtype>* >& bottom,
 }
 
 template <typename Dtype>
-void PoolingLayer<Dtype>::backward_gpu(const vector<Blob<Dtype>* >& top,
+void PoolingLayer<Dtype>::backward_cpu(const vector<Blob<Dtype>* >& top,
 	const vector<bool>& propagate_down,
 	const vector<Blob<Dtype>* >& bottom){
     // TODO()

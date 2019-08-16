@@ -1,9 +1,11 @@
+#include <glog/logging.h>
 #include "tiger/layers/cudnn/cudnn_sigmoid_layer.hpp"
 
 namespace tiger{
 template <typename Dtype>
 void CuDNNSigmoidLayer<Dtype>::layer_setup(const vector<Blob<Dtype>* >& bottom,
 	const vector<Blob<Dtype>* >& top){
+    LOG(INFO) << "invoke cudnn sigmoid "; 
     SigmoidLayer<Dtype>::layer_setup(bottom, top);
     CUDNN_CHECK(cudnnCreate(&handle_));
     cudnn::createTensor4dDesc<Dtype>(&bottom_desc_);
@@ -43,4 +45,3 @@ template class CuDNNSigmoidLayer<float>;
 template class CuDNNSigmoidLayer<double>;
 
 }
-

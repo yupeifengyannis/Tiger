@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <iostream>
 #include "tiger/common.hpp"
 #include "tiger/tiger.pb.h"
 
@@ -70,15 +71,16 @@ private:
 template <typename Dtype>
 class LayerRegisterer{
 public:
-    typedef std::shared_ptr<Layer<Dtype> > (*Creator)(const LayerParameter);
+    typedef std::shared_ptr<Layer<Dtype> > (*Creator)(const LayerParameter&);
     LayerRegisterer(const string& type, Creator creator){
+	LOG(INFO) << "registering layer type: " << type;
 	LayerRegistry<Dtype>::add_creator(type, creator);
     }
 };
 
 #define REGISTER_LAYER_CREATOR(type, creator)\
-    static LayerRegisterer<float> g_creator_f##type(#type, creator<float>)\
-    static LayerRegisterer<double> g_creator_g##type(#type, creator<double>)\
+    static LayerRegisterer<float> g_creator_f##type(#type, creator<float>);\
+    static LayerRegisterer<double> g_creator_d##type(#type, creator<double>)
 
 #define REGISTER_LAYER_CLASS(type)\
     template <typename Dtype>\

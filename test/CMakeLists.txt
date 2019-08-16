@@ -6,6 +6,8 @@ foreach(source ${srcs})
     target_link_libraries(${name} ${tiger_test_libs})
 endforeach(source)
 
+message(STATUS "libs is ${tiger_test_libs}")
+
 file(GLOB cuda_srcs ${CMAKE_CURRENT_SOURCE_DIR}/*.cu)
 foreach(source ${cuda_srcs})
     list(APPEND CUDA_NVCC_FLAGS "-std=c++11")

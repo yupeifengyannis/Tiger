@@ -49,6 +49,4 @@ CuDNNPoolingLayer<Dtype>::~CuDNNPoolingLayer(){
 
 template class CuDNNPoolingLayer<float>;
 template class CuDNNPoolingLayer<double>;
-
-
 }

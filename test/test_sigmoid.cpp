@@ -1,10 +1,10 @@
 #include <glog/logging.h>
 #include <iostream>
+#include "tiger/layer_factory.hpp"
 #include "tiger/layers/neuron/sigmoid_layer.hpp"
 #include "tiger/layers/cudnn/cudnn_sigmoid_layer.hpp"
 #include "tiger/tiger.pb.h"
 #include "tiger/common.hpp"
-
 using namespace tiger;
 void test_sigmoid_reshape(Layer<float>* layer, vector<Blob<float>* >& bottom_vec,
 	vector<Blob<float>* >& top_vec){
@@ -16,7 +16,6 @@ void test_sigmoid_reshape(Layer<float>* layer, vector<Blob<float>* >& bottom_vec
     LOG(INFO) << "bottom_data.shape_string() is " << bottom_vec[0]->shape_string();
     LOG(INFO) << "top_data.shape_string() is " << top_vec[0]->shape_string();
 }
-
 void test_sigmoid_forward(Layer<float>* layer, const vector<Blob<float>* >& bottom_vec,
 	const vector<Blob<float>* >& top_vec){
     Tiger::set_mode(Tiger::GPU);
@@ -27,7 +26,6 @@ void test_sigmoid_forward(Layer<float>* layer, const vector<Blob<float>* >& bott
 	std::cout << data[i] << " ";
     }
     std::cout << std::endl;
-    
 }
 
 void test_sigmoid_backward(Layer<float>* layer, const vector<Blob<float>* >& top_vec,
@@ -48,7 +46,10 @@ void test_sigmoid_backward(Layer<float>* layer, const vector<Blob<float>* >& top
 }
 
 int main(){
+
     LayerParameter layer_param;
+    layer_param.set_type("Sigmoid");
+    layer_param.set_backend(TIGER);
     std::vector<int> shape_data{1,1,1,4};
     Blob<float> bottom_data(shape_data);
     Blob<float> top_data;
@@ -57,8 +58,9 @@ int main(){
     std::vector<Blob<float>* > top_vec;
     top_vec.push_back(&top_data);
     std::shared_ptr<Layer<float> > sigmoid_layer;
-    // sigmoid_layer.reset(new CuDNNSigmoidLayer<float>(layer_param));
-    sigmoid_layer.reset(new SigmoidLayer<float>(layer_param));
+    // sigmoid_layer.reset(new SigmoidLayer<float>(layer_param));
+    sigmoid_layer = tiger::LayerRegistry<float>::create_layer(layer_param);
+
     int count = bottom_data.count();
     float* data = bottom_data.mutable_cpu_data();
     for(int i = 0; i < count; i++){

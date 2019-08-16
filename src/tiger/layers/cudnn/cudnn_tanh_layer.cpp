@@ -37,10 +37,6 @@ CuDNNTanhLayer<Dtype>::~CuDNNTanhLayer(){
     cudnnDestroyTensorDescriptor(this->top_desc_);
     cudnnDestroy(this->handle_);
 }
-
-
 template class CuDNNTanhLayer<float>;
 template class CuDNNTanhLayer<double>;
-
 }
-

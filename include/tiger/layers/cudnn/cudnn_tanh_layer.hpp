@@ -39,5 +39,4 @@ protected:
 
 }
 
-
 #endif

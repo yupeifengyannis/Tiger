@@ -1,6 +1,5 @@
 #ifndef TIGER_LAYERS_CUDNN_POOLING_LAYER_HPP
 #define TIGER_LAYERS_CUDNN_POOLING_LAYER_HPP
-
 #include "tiger/layers/conv/pooling_layer.hpp"
 #include "tiger/utils/cudnn.hpp"
 namespace tiger{

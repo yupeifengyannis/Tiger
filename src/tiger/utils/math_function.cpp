@@ -7,7 +7,7 @@
 namespace tiger{
 
 template <typename Dtype>
-void tiger_rng_bernoulli(const int n, const Dtype p, int* r){
+void tiger_rng_bernoulli(const int n, const Dtype p, unsigned int* r){
     CHECK_GE(n, 0);
     CHECK(r);
     CHECK_GE(p, 0);
@@ -21,9 +21,9 @@ void tiger_rng_bernoulli(const int n, const Dtype p, int* r){
 } 
 
 template 
-void tiger_rng_bernoulli<float>(const int n, const float p, int* r);
+void tiger_rng_bernoulli<float>(const int n, const float p, unsigned int* r);
 template
-void tiger_rng_bernoulli<double>(const int n, const double p, int* r);
+void tiger_rng_bernoulli<double>(const int n, const double p, unsigned int* r);
 
 
 }

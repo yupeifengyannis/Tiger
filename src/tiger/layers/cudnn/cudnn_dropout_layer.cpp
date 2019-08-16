@@ -1,8 +1,5 @@
 #include "tiger/layers/cudnn/cudnn_dropout_layer.hpp"
-
 namespace tiger{
-
-
 template <typename Dtype>
 void CuDNNDropoutLayer<Dtype>::layer_setup(const vector<Blob<Dtype>* >& bottom,
 	const vector<Blob<Dtype>* >& top){
@@ -29,8 +26,4 @@ void CuDNNDropoutLayer<Dtype>::reshape(const vector<Blob<Dtype>* >& bottom,
     // TODO
     // cudnnSetDropoutDescriptor()
 }
-
-
-
-
 }

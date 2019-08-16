@@ -44,4 +44,3 @@ template class CuDNNReLULayer<float>;
 template class CuDNNReLULayer<double>;
 
 }
-

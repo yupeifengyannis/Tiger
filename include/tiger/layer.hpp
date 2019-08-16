@@ -6,6 +6,7 @@
 #include "tiger/common.hpp"
 #include "tiger/blob.hpp"
 #include "tiger/tiger.pb.h"
+#include "tiger/layer_factory.hpp"
 
 namespace tiger{
 

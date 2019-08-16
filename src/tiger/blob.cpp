@@ -243,5 +243,7 @@ void Blob<Dtype>::to_mat_vec(vector<cv::Mat>& mat){
 
 template class Blob<float>;
 template class Blob<double>;
+template class Blob<unsigned int>;
+template class Blob<int>;
 
 }
