@@ -22,6 +22,10 @@ public:
     void init(const NetParameter& param);
     const std::vector<Blob<Dtype>* >& forward(Dtype* loss = nullptr);
     void backward();
+    
+    Dtype forward_from_to(int start, int end);
+    void backward_from_to(int start, int end);
+
 
 protected:
     void append_top(const NetParameter& param, const int layer_id,
@@ -64,6 +68,7 @@ protected:
     size_t memory_used_;
 
 };
+
 
 }
 #endif

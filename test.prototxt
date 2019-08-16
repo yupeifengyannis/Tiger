@@ -1,0 +1,50 @@
+name: "LeNet"
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "/home/yupefieng/Documents/dl_framework/caffe/examples/mnist/mnist_train_leveldb"
+    batch_size: 64
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "data"
+  top: "ip1"
+  inner_param {
+    num_output: 500
+    weight_filler {
+      type: "constant"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip1"
+  top: "ip1"
+}
+layer {
+  name: "ip2"
+  type: "InnerProduct"
+  bottom: "ip1"
+  top: "ip2"
+  inner_param {
+    num_output: 10
+    weight_filler {
+      type: "constant"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}

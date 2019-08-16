@@ -1,6 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include "tiger/utils/io.hpp"
 #include "tiger/layers/data/data_layer.hpp"
+#include "tiger/layer_factory.hpp"
 #include "tiger/tiger.pb.h"
 
 namespace tiger{
@@ -79,10 +80,9 @@ void DataLayer<Dtype>::load_batch(Batch<Dtype>* batch){
     }
 
 }
-
-
 template class DataLayer<float>;
 template class DataLayer<double>;
 
+REGISTER_LAYER_CLASS(Data);
 
 }

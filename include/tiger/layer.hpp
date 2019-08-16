@@ -7,6 +7,7 @@
 #include "tiger/blob.hpp"
 #include "tiger/tiger.pb.h"
 #include "tiger/layer_factory.hpp"
+#include "tiger/utils/math_function.hpp"
 
 namespace tiger{
 
@@ -35,7 +36,8 @@ public:
 	layer_setup(bottom, top);
 	// 根据相应的参数来确定相关blob的维度
 	reshape(bottom, top);
-
+	// 设置相关loss的权重
+	set_loss_weights(top);
     }
 
     virtual void layer_setup(const vector<Blob<Dtype>* >& bottom,
@@ -44,7 +46,7 @@ public:
     virtual void reshape(const vector<Blob<Dtype>* >& bottom,
 	    const vector<Blob<Dtype>* >& top) = 0;
 
-    inline void forward(const vector<Blob<Dtype>* >& bottom,
+    inline Dtype forward(const vector<Blob<Dtype>* >& bottom,
 	    const vector<Blob<Dtype>* >& top);
 
     inline void backward(const vector<Blob<Dtype>* >& top,
@@ -152,32 +154,54 @@ protected:
 	// TODO(需要检查其他的blob的情况)
     }
 
+
     inline void set_loss_weights(const vector<Blob<Dtype>* >& top){
+	// 这里一般只有loss层才会去设置该层的损失参数
 	int num_loss_weights = layer_param_.loss_weight_size();
 	if(num_loss_weights){
 	    CHECK_EQ(top.size(), num_loss_weights) << 
 		"loss weights的个数必须和top的个数一致";
-	}
-	for(int top_id = 0; top_id < top.size(); top_id++){
-	    Dtype loss_weight = layer_param_.loss_weight(top_id);
-	    if(loss_weight == Dtype(0)){
-		continue;
+	    for(int top_id = 0; top_id < top.size(); top_id++){
+		Dtype loss_weight = layer_param_.loss_weight(top_id);
+		if(loss_weight == Dtype(0)){
+		    continue;
+		}
+		set_loss(top_id, loss_weight);
+		const int count = top[top_id]->count();
+		Dtype* loss_multiplier = top[top_id]->mutable_cpu_diff();
+		tiger_set(count, loss_weight, loss_multiplier);
 	    }
 	}
-	// TODO(需要完成学习参数的0\1权重参数设置)
     }
 
 };
 
 template <typename Dtype>
-inline void Layer<Dtype>::forward(const vector<Blob<Dtype>* >& bottom, 
+inline Dtype Layer<Dtype>::forward(const vector<Blob<Dtype>* >& bottom, 
 	const vector<Blob<Dtype>* >& top){
+    Dtype loss = 0;
     if(Tiger::mode() == Tiger::CPU){
 	forward_cpu(bottom, top);
     }
     else{
 	forward_gpu(bottom, top);
     }
+    for(unsigned int top_id = 0; top_id < top.size(); ++top_id){
+	if(!this->loss(top_id)){
+	    continue;
+	}
+	const int count = top[top_id]->count();
+	const Dtype* data = top[top_id]->cpu_data();
+	// 前面已经将所有的loss weight设置到top blob的cpu_diff中。
+	// 在实际反向传播的时候也不会去用到这个cpu_diff的，因为
+	// 我们实际上在loss层的位置放置了一个diff_成员变量来用于
+	// 方向传播
+	const Dtype* loss_weights = top[top_id]->cpu_diff();
+	Dtype blob_loss = 0;
+	tiger_gpu_dot(count, data, loss_weights, &blob_loss);
+	loss += blob_loss;
+    }
+    return loss;
 }
 
 template <typename Dtype>

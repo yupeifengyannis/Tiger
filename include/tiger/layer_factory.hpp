@@ -41,6 +41,7 @@ public:
 	CreatorRegistry& registry_table = registry();
 	CHECK_EQ(registry_table.count(type), 1) << "unknown layer type: " << type << 
 	    " (known types: " << layer_type_string() << ")";
+	LOG(INFO) << "create layer: " << param.name();
 	return registry_table[type](param);
     }
 
