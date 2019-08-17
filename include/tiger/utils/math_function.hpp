@@ -2,6 +2,7 @@
 #define TIGER_UTILS_MATH_FUNCTIONS
 #include <string.h>
 #include <cblas.h>
+#include "tiger/utils/device_alternate.hpp"
 #include "tiger/common.hpp"
 namespace tiger{
 
@@ -16,6 +17,21 @@ inline void tiger_set(const int N, const Dtype data, void* X){
 	Y[i] = data;
     }
 }
+
+template <typename Dtype>
+inline void tiger_copy(const int N, const Dtype* X, Dtype* Y){
+    if(X == Y){
+	return;
+    }
+    if(Tiger::mode() == Tiger::GPU){
+	CUDA_CHECK(cudaMemcpy(Y, X, sizeof(Dtype) * N, cudaMemcpyDefault));
+    }
+    else{
+	memcpy(Y, X, sizeof(Dtype) * N);
+    }
+}
+
+
 
 template <typename Dtype>
 inline void tiger_cpu_axpby(const int N, const Dtype alpha, const Dtype* X, 

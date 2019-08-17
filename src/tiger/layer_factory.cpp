@@ -11,6 +11,10 @@
 #include "tiger/layers/cudnn/cudnn_relu_layer.hpp"
 #include "tiger/layers/neuron/tanh_layer.hpp"
 #include "tiger/layers/cudnn/cudnn_tanh_layer.hpp"
+#include "tiger/layers/neuron/softmax_layer.hpp"
+#include "tiger/layers/cudnn/cudnn_softmax.hpp"
+#include "tiger/layers/conv/pooling_layer.hpp"
+#include "tiger/layers/cudnn/cudnn_pooling_layer.hpp"
 
 namespace tiger{
 template <typename Dtype>
@@ -71,5 +75,32 @@ std::shared_ptr<Layer<Dtype> > get_tanh_layer(const LayerParameter& param){
 }
 
 REGISTER_LAYER_CREATOR(Tanh, get_tanh_layer);
+
+template <typename Dtype>
+std::shared_ptr<Layer<Dtype> > get_softmax_layer(const LayerParameter& param){
+    if(TIGER == param.backend()){
+	return std::shared_ptr<Layer<Dtype> > (new SoftmaxLayer<Dtype>(param));
+    }
+    else if(CUDNN == param.backend()){
+	return std::shared_ptr<Layer<Dtype> > (new CuDNNSoftmaxLayer<Dtype>(param));
+    }
+    else{
+	LOG(INFO) << "Layer " << param.name() << "has unkonwn backend";
+    }
+}
+
+REGISTER_LAYER_CREATOR(Softmax, get_softmax_layer);
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -64,6 +64,7 @@ message LayerParameter{
     optional ReLUParameter relu_param = 12;
     optional DropoutParameter drop_param = 13;
     optional SoftmaxParameter softmax_param = 14;
+    optional ConvolutionParameter conv_param = 15;
 }
 
 message TransformationParameter{
@@ -170,4 +171,59 @@ message DropoutParameter{
 message SoftmaxParameter{
 optional int32 axis = 1 [default = 1];
 }
+
+message ConvolutionParameter{
+    optional uint32 num_output = 1;
+    optional bool bias_term = 2 [default = true];
+    optional uint32 pad_h = 3;
+    optional uint32 pad_w = 4;
+    optional uint32 kernel_h = 5;
+    optional uint32 kernel_w = 6;
+    optional uint32 stride_h = 7;
+    optional uint32 stride_w = 8;
+    optional uint32 dilation_h = 9;
+    optional uint32 dilation_w = 10;
+    optional uint32 group = 11 [default = 1];
+    optional FillerParameter weight_filler = 12;
+    optional FillerParameter bias_filler = 13;
+    optional Backend backend = 14 [default = TIGER];
+    optional int32 axis = 15 [default = 1];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

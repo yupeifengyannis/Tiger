@@ -49,7 +49,7 @@ int main(){
 
     LayerParameter layer_param;
     layer_param.set_type("Sigmoid");
-    layer_param.set_backend(TIGER);
+    layer_param.set_backend(CUDNN);
     std::vector<int> shape_data{1,1,1,4};
     Blob<float> bottom_data(shape_data);
     Blob<float> top_data;
@@ -71,4 +71,6 @@ int main(){
     std::vector<bool> propagate_down{true};
     test_sigmoid_backward(&*sigmoid_layer, top_vec,
 	    propagate_down, bottom_vec);
+
+
 }
